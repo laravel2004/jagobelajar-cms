@@ -13,7 +13,7 @@
 <body class="bg-[#f9f9ff] text-[#141b2c] antialiased">
     <div class="min-h-screen overflow-x-hidden">
         @include('components.site-header')
-        <main>
+        <main class="pt-24 md:pt-32 lg:pt-0">
             {{ $slot }}
         </main>
         @include('components.site-footer')

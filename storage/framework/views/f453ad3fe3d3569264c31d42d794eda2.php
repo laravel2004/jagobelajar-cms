@@ -73,7 +73,7 @@
                 <div class="mx-auto mt-3 h-1 w-16 rounded-full bg-[#feb700]"></div>
             </div>
 
-            <div class="mx-auto mt-8 grid max-w-5xl gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3 lg:justify-items-center">
+            <div class="mx-auto mt-8 grid max-w-5xl justify-items-center gap-5 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3">
                 <?php $__currentLoopData = ($featureItems ?: [
                     ['title' => 'Bimbel Online Interaktif', 'description' => 'Dibimbing tutor berpengalaman', 'icon' => 'chat', 'badge' => 'bg-rose-100 text-rose-500'],
                     ['title' => 'Materi Terstruktur', 'description' => 'Pahami materi mulai dari konsepnya', 'icon' => 'account_tree', 'badge' => 'bg-emerald-100 text-emerald-600'],

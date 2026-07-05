@@ -10,14 +10,14 @@
 <?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Login - '.config('app.name'))]); ?>
     <section class="relative overflow-hidden bg-[#f9f9ff] py-12 sm:py-16">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_12%,rgba(254,183,0,0.24),transparent_30%),radial-gradient(circle_at_12%_20%,rgba(30,90,240,0.18),transparent_34%)]"></div>
-        <div class="jb-container relative grid items-center gap-8 lg:grid-cols-[1fr_440px]">
+        <div class="jb-container relative grid items-center gap-6 sm:p-8 lg:grid-cols-[1fr_440px]">
             <div class="max-w-2xl">
                 <span class="inline-flex rounded-full bg-[#dce1ff] px-4 py-2 text-xs font-extrabold text-[#0043c6]">Selamat datang kembali</span>
-                <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-[#141b2c] sm:text-5xl">Masuk dan lanjutkan belajar</h1>
+                <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-[#141b2c] sm:text-4xl sm:text-5xl">Masuk dan lanjutkan belajar</h1>
                 <p class="mt-4 text-sm leading-7 text-[#5f667d] sm:text-base">Gunakan satu akun untuk mengakses dashboard, try out, bimbel, dan progres belajar Jago Belajar.</p>
             </div>
 
-            <div class="rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(20,27,44,0.14)] ring-1 ring-[#e9edff] sm:p-8">
+            <div class="rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(20,27,44,0.14)] ring-1 ring-[#e9edff] sm:p-6 sm:p-8">
                 <h2 class="text-2xl font-extrabold text-[#141b2c]">Login</h2>
                 <p class="mt-2 text-sm leading-6 text-[#5f667d]">Admin masuk ke dashboard admin, user biasa masuk ke dashboard user.</p>
 

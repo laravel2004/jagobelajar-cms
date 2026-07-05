@@ -13,7 +13,7 @@
 <body class="bg-[#f9f9ff] text-[#141b2c] antialiased">
     <div class="min-h-screen overflow-x-hidden">
         <?php echo $__env->make('components.site-header', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <main>
+        <main class="pt-24 md:pt-32 lg:pt-0">
             <?php echo e($slot); ?>
 
         </main>

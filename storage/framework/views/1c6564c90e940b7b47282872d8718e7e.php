@@ -23,13 +23,13 @@
                         <?php endif; ?>
                     </div>
 
-                    <div class="p-6 sm:p-8">
+                    <div class="p-4 sm:p-6 lg:p-8">
                         <?php if($hasPromo): ?>
                             <span class="inline-flex rounded-full bg-rose-500 px-4 py-2 text-xs font-extrabold text-white">Promo Aktif</span>
                         <?php endif; ?>
                         <h1 class="mt-4 text-3xl font-extrabold tracking-tight text-[#141b2c] sm:text-5xl"><?php echo e($bimbel->name); ?></h1>
 
-                        <div class="mt-6 grid gap-4 md:grid-cols-3">
+                        <div class="mt-6 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                             <?php $__currentLoopData = [['Jadwal', $bimbel->schedule ?: '-'], ['Metode', $bimbel->method ?: '-'], ['Level', $bimbel->level ?: '-']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$label, $value]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="rounded-2xl bg-[#f1f3ff] p-4">
                                     <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#0043c6]"><?php echo e($label); ?></p>

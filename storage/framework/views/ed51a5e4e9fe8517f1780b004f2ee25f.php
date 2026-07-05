@@ -10,10 +10,10 @@
 <?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Register - '.config('app.name'))]); ?>
     <section class="relative overflow-hidden bg-[#f9f9ff] py-12 sm:py-16">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_12%,rgba(254,183,0,0.24),transparent_30%),radial-gradient(circle_at_12%_20%,rgba(30,90,240,0.18),transparent_34%)]"></div>
-        <div class="jb-container relative grid items-center gap-8 lg:grid-cols-[1fr_460px]">
+        <div class="jb-container relative grid items-center gap-6 sm:p-8 lg:grid-cols-[1fr_460px]">
             <div class="max-w-2xl">
                 <span class="inline-flex rounded-full bg-[#fff2c7] px-4 py-2 text-xs font-extrabold text-[#7c5800]">Akun user gratis</span>
-                <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-[#141b2c] sm:text-5xl">Daftar dan mulai perjalanan belajarmu</h1>
+                <h1 class="mt-5 text-4xl font-extrabold tracking-tight text-[#141b2c] sm:text-4xl sm:text-5xl">Daftar dan mulai perjalanan belajarmu</h1>
                 <p class="mt-4 text-sm leading-7 text-[#5f667d] sm:text-base">Akun baru otomatis menjadi role user biasa. Setelah daftar, kamu langsung masuk ke dashboard user untuk melihat progres dan fitur belajar.</p>
                 <div class="mt-8 grid gap-4 sm:grid-cols-3">
                     <?php $__currentLoopData = [['Try Out', 'Simulasi ujian'], ['Bimbel', 'Paket belajar'], ['Progress', 'Pantau hasil']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$title, $desc]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
@@ -22,7 +22,7 @@
                 </div>
             </div>
 
-            <div class="rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(20,27,44,0.14)] ring-1 ring-[#e9edff] sm:p-8">
+            <div class="rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(20,27,44,0.14)] ring-1 ring-[#e9edff] sm:p-6 sm:p-8">
                 <h2 class="text-2xl font-extrabold text-[#141b2c]">Register</h2>
                 <p class="mt-2 text-sm leading-6 text-[#5f667d]">Buat akun baru untuk role <strong>user</strong>.</p>
 

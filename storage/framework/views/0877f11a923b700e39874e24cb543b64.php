@@ -15,7 +15,7 @@
                 <p class="mt-3 text-sm leading-7 text-[#5f667d] sm:text-base">Pilih simulasi ujian sesuai jenjang, lengkap dengan jadwal pelaksanaan dan detail paket.</p>
             </div>
 
-            <div class="mt-8 grid gap-6 lg:grid-cols-3">
+            <div class="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 <?php $__empty_1 = true; $__currentLoopData = $examSessions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $examSession): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <?php ($hasPromo = $examSession->is_promo_active && $examSession->sale_price !== null && $examSession->sale_price < $examSession->price); ?>
                     <?php ($displayPrice = $hasPromo ? $examSession->sale_price : $examSession->price); ?>

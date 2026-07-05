@@ -1,4 +1,4 @@
-﻿<header x-data="{ open: false }" class="sticky top-0 z-40 border-b border-[#e9edff] bg-white/90 backdrop-blur">
+﻿<header x-data="{ open: false }" class="fixed inset-x-0 top-0 z-40 border-b border-[#e9edff] bg-white/90 backdrop-blur lg:sticky">
     <div class="jb-container flex items-center justify-between gap-4 py-4">
         <a href="<?php echo e(route('home')); ?>" class="flex items-center gap-2 text-lg font-extrabold text-[#0043c6]">
             <img src="<?php echo e(asset('images/logo.png')); ?>" alt="Jago Belajar" class="h-16 w-auto md:h-24" />
