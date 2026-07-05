@@ -55,10 +55,13 @@
                 <input name="program_title" value="{{ old('program_title', $content->program_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul program">
                 <div class="xl:col-span-2"><textarea name="program_description" rows="3" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi program">{{ old('program_description', $content->program_description) }}</textarea></div>
             </div>
-            <div class="mt-4 grid gap-4 lg:grid-cols-3">
+            <div id="feature-items" class="mt-4 grid gap-4 lg:grid-cols-3">
                 @foreach (old('feature_items', $content->feature_items ?? []) as $index => $item)
-                    <div class="rounded-2xl border border-[#e6eaf5] p-4">
-                        <div class="mb-3 text-sm font-semibold text-[#64708b]">Item Keunggulan {{ $index + 1 }}</div>
+                    <div class="rounded-2xl border border-[#e6eaf5] p-4 feature-item">
+                        <div class="mb-3 flex items-center justify-between gap-3 text-sm font-semibold text-[#64708b]">
+                            <span>Item Keunggulan {{ $index + 1 }}</span>
+                            <button type="button" onclick="this.closest('.feature-item').remove(); window.renumberFeatureItems()" class="text-rose-500">Hapus</button>
+                        </div>
                         <input name="feature_items[{{ $index }}][title]" value="{{ $item['title'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul">
                         <input name="feature_items[{{ $index }}][description]" value="{{ $item['description'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi">
                         <input name="feature_items[{{ $index }}][icon]" value="{{ $item['icon'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Icon key">
@@ -66,6 +69,7 @@
                     </div>
                 @endforeach
             </div>
+            <button type="button" onclick="window.addFeatureItem()" class="mt-4 rounded-xl bg-[#f1f3ff] px-4 py-2 text-sm font-semibold text-[#0043c6]">+ Tambah Keunggulan</button>
             <div class="mt-6 grid gap-4 lg:grid-cols-3">
                 @php($defaultProgramPoints = [
                     [['title' => 'TKA SD SMP SMA', 'description' => 'Taklukkan TKA dengan latihan soal'], ['title' => 'UTS UAS SD SMP SMA', 'description' => 'Jadi juara kelas, perbanyak latihan soal'], ['title' => 'OSN & UTBK', 'description' => 'Wujudkan mimpi dengan latihan soal']],
@@ -194,6 +198,22 @@
     </form>
 
     <script>
+        window.renumberFeatureItems = function () {
+            document.querySelectorAll('#feature-items .feature-item').forEach((item, index) => {
+                item.querySelector('span').textContent = `Item Keunggulan ${index + 1}`;
+                item.querySelectorAll('input').forEach((input) => {
+                    input.name = input.name.replace(/feature_items\[\d+\]/, `feature_items[${index}]`);
+                });
+            });
+        };
+        window.addFeatureItem = function () {
+            const container = document.getElementById('feature-items');
+            const index = container.querySelectorAll('.feature-item').length;
+            const div = document.createElement('div');
+            div.className = 'rounded-2xl border border-[#e6eaf5] p-4 feature-item';
+            div.innerHTML = `<div class="mb-3 flex items-center justify-between gap-3 text-sm font-semibold text-[#64708b]"><span>Item Keunggulan ${index + 1}</span><button type="button" onclick="this.closest('.feature-item').remove(); window.renumberFeatureItems()" class="text-rose-500">Hapus</button></div><input name="feature_items[${index}][title]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul"><input name="feature_items[${index}][description]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi"><input name="feature_items[${index}][icon]" value="users" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Icon key"><input name="feature_items[${index}][badge]" value="bg-[#dce1ff] text-[#0043c6]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class badge">`;
+            container.appendChild(div);
+        };
         window.renumberProgramPoints = function (programItem) {
             const index = programItem.dataset.programIndex;
             programItem.querySelectorAll('.program-point-row').forEach((row, pointIndex) => {

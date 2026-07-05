@@ -13,7 +13,7 @@
             <div>
                 <p class="text-xs font-bold uppercase tracking-[0.2em] text-[#0043c6]">Overview</p>
                 <h2 class="mt-2 text-2xl font-semibold tracking-tight text-[#141b2c] sm:text-3xl">Kelola konten Jago Belajar</h2>
-                <p class="mt-3 max-w-2xl text-sm leading-7 text-[#64708b]">Pantau materi, latihan soal, diskusi, dan kategori yang tampil di platform belajar.</p>
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-[#64708b]">Fokus ke bimbel, blog, tryout, dan konten utama website dari satu dashboard.</p>
             </div>
             <a href="<?php echo e(route('home')); ?>" class="inline-flex justify-center rounded-xl bg-[#0043c6] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#003ab1]">Lihat Website</a>
         </div>
@@ -21,10 +21,10 @@
 
     <section class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <?php $__currentLoopData = [
-            ['Total Materi', $stats['materials'] ?? 0, 'bg-[#eef3ff] text-[#0043c6]'],
-            ['Total Soal', $stats['quizzes'] ?? 0, 'bg-[#fff8df] text-[#7c5800]'],
-            ['Diskusi', $stats['discussions'] ?? 0, 'bg-[#edf8f2] text-[#1c9b5e]'],
-            ['Kategori', $stats['categories'] ?? 0, 'bg-[#f1efff] text-[#4a36c4]'],
+            ['Total Bimbel', $stats['bimbels'] ?? 0, 'bg-[#eef3ff] text-[#0043c6]'],
+            ['Total Blog', $stats['blogs'] ?? 0, 'bg-[#fff8df] text-[#7c5800]'],
+            ['Total Sesi Ujian', $stats['exam_sessions'] ?? 0, 'bg-[#edf8f2] text-[#1c9b5e]'],
+            ['Sesi Aktif', $stats['published_exam_sessions'] ?? 0, 'bg-[#f1efff] text-[#4a36c4]'],
         ]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$label, $value, $color]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
             <article class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
                 <div class="flex items-center justify-between gap-4">
@@ -41,12 +41,12 @@
             <div class="flex items-start justify-between gap-4">
                 <div>
                     <h3 class="text-lg font-semibold text-[#141b2c]">Aktivitas Konten</h3>
-                    <p class="mt-1 text-sm text-[#64708b]">Ringkasan dummy aktivitas terbaru.</p>
+                    <p class="mt-1 text-sm text-[#64708b]">Ringkasan area admin yang aktif dipakai sekarang.</p>
                 </div>
                 <span class="rounded-full bg-[#f1f3ff] px-3 py-1 text-xs font-semibold text-[#0043c6]">Hari ini</span>
             </div>
             <div class="mt-5 divide-y divide-[#edf0f7]">
-                <?php $__currentLoopData = [['Materi baru siap dipublish', 'Matematika - Pecahan'], ['Try out perlu dicek', 'Latihan Pecahan Dasar'], ['Diskusi pinned aktif', 'Tips belajar matematika']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$title, $desc]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $__currentLoopData = [['CMS Bimbel aktif', 'Kelola paket bimbel dan harga promo'], ['CMS Blog aktif', 'Kelola artikel blog publik'], ['Sesi ujian aktif', 'Update draft dan publish tryout']]; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as [$title, $desc]): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <div class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
                         <div>
                             <p class="text-sm font-semibold text-[#141b2c]"><?php echo e($title); ?></p>
@@ -60,11 +60,11 @@
 
         <aside class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)] sm:p-6">
             <h3 class="text-lg font-semibold text-[#141b2c]">Aksi Cepat</h3>
-            <p class="mt-1 text-sm text-[#64708b]">Shortcut admin paling sering dipakai.</p>
+            <p class="mt-1 text-sm text-[#64708b]">Shortcut admin yang masih dipakai.</p>
             <div class="mt-5 grid gap-3">
-                <a href="<?php echo e(route('materials.index')); ?>" class="rounded-xl bg-[#f6f8ff] px-4 py-3 text-sm font-semibold text-[#0043c6] transition hover:bg-[#eef3ff]">Kelola Materi</a>
-                <a href="<?php echo e(route('quizzes.index')); ?>" class="rounded-xl bg-[#fffaf0] px-4 py-3 text-sm font-semibold text-[#7c5800] transition hover:bg-[#fff2c7]">Kelola Soal</a>
-                <a href="<?php echo e(route('forum.index')); ?>" class="rounded-xl bg-[#f0faf5] px-4 py-3 text-sm font-semibold text-[#1c9b5e] transition hover:bg-[#e8f7ef]">Lihat Forum</a>
+                <a href="<?php echo e(route('admin.bimbel.index')); ?>" class="rounded-xl bg-[#f6f8ff] px-4 py-3 text-sm font-semibold text-[#0043c6] transition hover:bg-[#eef3ff]">Kelola Bimbel</a>
+                <a href="<?php echo e(route('admin.blogs.index')); ?>" class="rounded-xl bg-[#fffaf0] px-4 py-3 text-sm font-semibold text-[#7c5800] transition hover:bg-[#fff2c7]">Kelola Blog</a>
+                <a href="<?php echo e(route('admin.exam-sessions.index')); ?>" class="rounded-xl bg-[#f0faf5] px-4 py-3 text-sm font-semibold text-[#1c9b5e] transition hover:bg-[#e8f7ef]">Kelola Sesi Ujian</a>
             </div>
         </aside>
     </section>

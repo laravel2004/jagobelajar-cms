@@ -10,7 +10,7 @@
 <?php $component->withAttributes(['title' => \Illuminate\View\Compilers\BladeCompiler::sanitizeComponentAttribute('Pembayaran Berhasil - '.config('app.name'))]); ?>
     <section class="bg-[#f9f9ff] py-12 sm:py-16">
         <div class="jb-container mx-auto max-w-3xl">
-            <div class="rounded-[2rem] bg-white p-6 shadow-[0_18px_50px_rgba(20,27,44,0.12)] ring-1 ring-[#e9edff] sm:p-8">
+            <div class="rounded-[2rem] bg-white p-4 shadow-[0_18px_50px_rgba(20,27,44,0.12)] ring-1 ring-[#e9edff] sm:p-6 lg:p-8">
                 <div class="flex items-start gap-4">
                     <div class="grid h-12 w-12 place-items-center rounded-2xl bg-emerald-500 text-xl font-extrabold text-white">✓</div>
                     <div>
@@ -19,7 +19,7 @@
                         <p class="mt-3 text-sm leading-7 text-[#5f667d]"><?php echo e($isPending ? 'Pembayaran masih diproses. Silakan tunggu konfirmasi pembayaran.' : 'Pembayaran kamu berhasil dan paket sudah masuk ke dashboard.'); ?></p>
                     </div>
                 </div>
-                <div class="mt-6 grid gap-3 text-sm text-[#434655] sm:grid-cols-2">
+                <div class="mt-6 grid gap-3 text-sm text-[#434655] grid-cols-1 sm:grid-cols-2">
                     <div class="rounded-2xl bg-[#f9f9ff] px-4 py-3 ring-1 ring-[#e9edff]"><span class="block text-xs font-bold uppercase tracking-[0.14em] text-[#8a93a8]">Order ID</span><strong><?php echo e($payment->order_id); ?></strong></div>
                     <div class="rounded-2xl bg-[#f9f9ff] px-4 py-3 ring-1 ring-[#e9edff]"><span class="block text-xs font-bold uppercase tracking-[0.14em] text-[#8a93a8]">Total</span><strong>Rp<?php echo e(number_format($payment->gross_amount, 0, ',', '.')); ?></strong></div>
                 </div>
