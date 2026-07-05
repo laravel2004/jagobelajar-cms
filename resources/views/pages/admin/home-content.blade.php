@@ -1,0 +1,272 @@
+<x-layouts.admin :title="'CMS Beranda'">
+    <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+            <h2 class="text-2xl font-bold text-[#141b2c]">CMS Beranda</h2>
+            <p class="mt-1 text-sm text-[#64708b]">CRUD copywriting per section sampai footer, layout publik tetap sama.</p>
+        </div>
+        <a href="{{ route('home') }}" class="inline-flex items-center justify-center rounded-xl border border-[#d9def1] bg-white px-4 py-2.5 text-sm font-semibold text-[#0043c6] transition hover:bg-[#f6f8ff]">Lihat Beranda</a>
+    </div>
+
+    @if (session('status'))
+        <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">{{ session('status') }}</div>
+    @endif
+
+    @if ($errors->any())
+        <div class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+            <p class="font-semibold">Ada data yang belum valid.</p>
+            <ul class="mt-2 list-disc pl-5">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('admin.cms-beranda.update') }}" class="space-y-6" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+
+        <section class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
+            <h3 class="text-lg font-semibold text-[#141b2c]">Section Hero</h3>
+            <div class="mt-4 grid gap-4 xl:grid-cols-2">
+                <input name="hero_badge" value="{{ old('hero_badge', $content->hero_badge) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Badge">
+                <input name="hero_image_alt" value="{{ old('hero_image_alt', $content->hero_image_alt) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Alt gambar hero">
+                <div class="rounded-2xl border border-[#e6eaf5] bg-[#f9f9ff] p-3">
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#64708b]">Preview Hero</p>
+                    <img src="{{ $content->hero_image_path ? asset($content->hero_image_path) : asset('images/no-bg-hero.png') }}" alt="Preview hero" class="h-32 w-full rounded-xl bg-white object-contain">
+                    <input type="file" name="hero_image" accept="image/*" class="mt-3 w-full rounded-xl border border-dashed border-[#d9def1] px-4 py-3 text-sm">
+                </div>
+                <div class="xl:col-span-2"><input name="hero_title" value="{{ old('hero_title', $content->hero_title) }}" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul hero"></div>
+                <div class="xl:col-span-2"><textarea name="hero_description" rows="4" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi hero">{{ old('hero_description', $content->hero_description) }}</textarea></div>
+                @foreach ((old('hero_benefits', $content->hero_benefits ?? ['', '', '', ''])) as $index => $benefit)
+                    <input type="text" name="hero_benefits[]" value="{{ $benefit }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Benefit {{ $index + 1 }}">
+                @endforeach
+                <input name="hero_primary_cta_label" value="{{ old('hero_primary_cta_label', $content->hero_primary_cta_label) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label CTA utama">
+                <input name="hero_primary_cta_url" value="{{ old('hero_primary_cta_url', $content->hero_primary_cta_url) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL CTA utama">
+                <input name="hero_secondary_cta_label" value="{{ old('hero_secondary_cta_label', $content->hero_secondary_cta_label) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label CTA kedua">
+                <input name="hero_secondary_cta_url" value="{{ old('hero_secondary_cta_url', $content->hero_secondary_cta_url) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL CTA kedua">
+            </div>
+        </section>
+
+        <section class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
+            <h3 class="text-lg font-semibold text-[#141b2c]">Section Keunggulan & Program</h3>
+            <div class="mt-4 grid gap-4 xl:grid-cols-2">
+                <input name="feature_title" value="{{ old('feature_title', $content->feature_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul keunggulan">
+                <input name="program_title" value="{{ old('program_title', $content->program_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul program">
+                <div class="xl:col-span-2"><textarea name="program_description" rows="3" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi program">{{ old('program_description', $content->program_description) }}</textarea></div>
+            </div>
+            <div class="mt-4 grid gap-4 lg:grid-cols-3">
+                @foreach (old('feature_items', $content->feature_items ?? []) as $index => $item)
+                    <div class="rounded-2xl border border-[#e6eaf5] p-4">
+                        <div class="mb-3 text-sm font-semibold text-[#64708b]">Item Keunggulan {{ $index + 1 }}</div>
+                        <input name="feature_items[{{ $index }}][title]" value="{{ $item['title'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul">
+                        <input name="feature_items[{{ $index }}][description]" value="{{ $item['description'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi">
+                        <input name="feature_items[{{ $index }}][icon]" value="{{ $item['icon'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Icon key">
+                        <input name="feature_items[{{ $index }}][badge]" value="{{ $item['badge'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class badge">
+                    </div>
+                @endforeach
+            </div>
+            <div class="mt-6 grid gap-4 lg:grid-cols-3">
+                @php($defaultProgramPoints = [
+                    [['title' => 'TKA SD SMP SMA', 'description' => 'Taklukkan TKA dengan latihan soal'], ['title' => 'UTS UAS SD SMP SMA', 'description' => 'Jadi juara kelas, perbanyak latihan soal'], ['title' => 'OSN & UTBK', 'description' => 'Wujudkan mimpi dengan latihan soal']],
+                    [['title' => 'TKA SD SMP SMA', 'description' => 'Persiapkan TKA mulai dari konsep materi'], ['title' => 'Matematika IPA B Inggris', 'description' => 'Jadi ambis kelas SD SMP SMA'], ['title' => 'OSN SD Matematika', 'description' => 'Jadi jagoan OSN']],
+                    [['title' => 'Tutor Berpengalaman', 'description' => 'Mentor dari PTN ternama'], ['title' => 'Jadwal Fleksibel', 'description' => 'Atur sesuai waktu luangmu'], ['title' => 'Materi Personal', 'description' => 'Sesuai kebutuhan spesifikmu']],
+                ])
+                @foreach (old('program_items', $content->program_items ?? []) as $index => $item)
+                    @php($points = old("program_items.$index.points", $item['points'] ?? $defaultProgramPoints[$index] ?? [['title' => '', 'description' => '']]))
+                    <div class="rounded-2xl border border-[#e6eaf5] p-4 program-item" data-program-index="{{ $index }}">
+                        <div class="mb-3 text-sm font-semibold text-[#64708b]">Card Program {{ $index + 1 }}</div>
+                        <input name="program_items[{{ $index }}][title]" value="{{ $item['title'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul">
+                        <input name="program_items[{{ $index }}][subtitle]" value="{{ $item['subtitle'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Subjudul">
+                        <input name="program_items[{{ $index }}][button]" value="{{ $item['button'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label tombol">
+                        <input name="program_items[{{ $index }}][border]" value="{{ $item['border'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class border">
+                        <input name="program_items[{{ $index }}][color]" value="{{ $item['color'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class text">
+                        <input name="program_items[{{ $index }}][background]" value="{{ $item['background'] ?? '' }}" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class background">
+                        <div class="mt-4 space-y-3 program-points">
+                            @foreach (array_values($points) as $pointIndex => $point)
+                                <div class="program-point-row rounded-xl border border-dashed border-[#d9def1] p-3">
+                                    <input name="program_items[{{ $index }}][points][{{ $pointIndex }}][title]" value="{{ $point['title'] ?? '' }}" class="mb-2 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Poin {{ $pointIndex + 1 }}">
+                                    <input name="program_items[{{ $index }}][points][{{ $pointIndex }}][description]" value="{{ $point['description'] ?? '' }}" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi poin">
+                                    <button type="button" onclick="window.removeProgramPoint(this)" class="mt-2 text-sm font-semibold text-rose-500">Hapus</button>
+                                </div>
+                            @endforeach
+                        </div>
+                        <button type="button" onclick="window.addProgramPoint(this.closest('.program-item'))" class="mt-3 rounded-xl bg-[#f1f3ff] px-4 py-2 text-sm font-semibold text-[#0043c6]">+ Tambah Poin</button>
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
+            <div class="flex items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold text-[#141b2c]">Section Galeri</h3>
+                <button type="button" onclick="window.addGalleryItem()" class="rounded-xl bg-[#f1f3ff] px-4 py-2 text-sm font-semibold text-[#0043c6]">+ Tambah Item</button>
+            </div>
+            <div class="mt-4 grid gap-4 xl:grid-cols-2">
+                <input name="gallery_title" value="{{ old('gallery_title', $content->gallery_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm xl:col-span-2" placeholder="Judul galeri">
+            </div>
+            <div id="gallery-items" class="mt-4 grid gap-4 xl:grid-cols-2">
+                @foreach (array_values(old('gallery_items', $content->gallery_items ?? [])) as $index => $item)
+                    <div class="rounded-2xl border border-[#e6eaf5] p-4 gallery-item">
+                        <div class="mb-3 flex items-center justify-between gap-3 text-sm font-semibold text-[#64708b]">
+                            <span>Item Galeri {{ $index + 1 }}</span>
+                            <button type="button" onclick="this.closest('.gallery-item').remove(); window.renumberGalleryItems()" class="text-rose-500">Hapus</button>
+                        </div>
+                        <input name="gallery_items[{{ $index }}][label]" value="{{ $item['label'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label">
+                        <input name="gallery_items[{{ $index }}][badge]" value="{{ $item['badge'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Badge">
+                        <img src="{{ !empty($item['image']) ? asset($item['image']) : asset('images/no-bg-hero.png') }}" alt="Preview gallery {{ $index + 1 }}" class="mb-3 h-32 w-full rounded-xl bg-[#f9f9ff] object-cover">
+                        <input type="file" name="gallery_images[{{ $index }}]" accept="image/*" class="w-full rounded-xl border border-dashed border-[#d9def1] px-4 py-3 text-sm">
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
+            <div class="flex items-center justify-between gap-3">
+                <h3 class="text-lg font-semibold text-[#141b2c]">Section Testimoni</h3>
+                <button type="button" onclick="window.addTestimonialItem()" class="rounded-xl bg-[#f1f3ff] px-4 py-2 text-sm font-semibold text-[#0043c6]">+ Tambah Testimoni</button>
+            </div>
+            <div class="mt-4 grid gap-4 lg:grid-cols-3">
+                <input name="testimonials_title" value="{{ old('testimonials_title', $content->testimonials_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm lg:col-span-3" placeholder="Judul testimoni">
+            </div>
+            <div id="testimonial-items" class="mt-4 grid gap-4 lg:grid-cols-3">
+                @foreach (array_values(old('testimonials', $content->testimonials ?? [])) as $index => $item)
+                    <div class="rounded-2xl border border-[#e6eaf5] p-4 testimonial-item">
+                        <div class="mb-3 flex items-center justify-between gap-3 text-sm font-semibold text-[#64708b]">
+                            <span>Testimoni {{ $index + 1 }}</span>
+                            <button type="button" onclick="this.closest('.testimonial-item').remove(); window.renumberTestimonialItems()" class="text-rose-500">Hapus</button>
+                        </div>
+                        <input name="testimonials[{{ $index }}][name]" value="{{ $item['name'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Nama">
+                        <input name="testimonials[{{ $index }}][role]" value="{{ $item['role'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Role">
+                        <textarea name="testimonials[{{ $index }}][quote]" rows="4" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Quote">{{ $item['quote'] ?? '' }}</textarea>
+                        <img src="{{ !empty($item['image']) ? asset($item['image']) : asset('images/logo.png') }}" alt="Preview testimoni {{ $index + 1 }}" class="mb-3 h-32 w-full rounded-xl bg-[#f9f9ff] object-cover">
+                        <input type="file" name="testimonial_images[{{ $index }}]" accept="image/*" class="w-full rounded-xl border border-dashed border-[#d9def1] px-4 py-3 text-sm">
+                    </div>
+                @endforeach
+            </div>
+        </section>
+
+        <section class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
+            <h3 class="text-lg font-semibold text-[#141b2c]">Section CTA Bawah</h3>
+            <div class="mt-4 grid gap-4 xl:grid-cols-2">
+                <input name="cta_title" value="{{ old('cta_title', $content->cta_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm xl:col-span-2" placeholder="Judul CTA">
+                <textarea name="cta_description" rows="3" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm xl:col-span-2" placeholder="Deskripsi CTA">{{ old('cta_description', $content->cta_description) }}</textarea>
+                <input name="cta_primary_label" value="{{ old('cta_primary_label', $content->cta_primary_label) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label CTA utama">
+                <input name="cta_primary_url" value="{{ old('cta_primary_url', $content->cta_primary_url) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL CTA utama">
+                <input name="cta_secondary_label" value="{{ old('cta_secondary_label', $content->cta_secondary_label) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label CTA kedua">
+                <input name="cta_secondary_url" value="{{ old('cta_secondary_url', $content->cta_secondary_url) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL CTA kedua">
+            </div>
+        </section>
+
+        <section class="rounded-2xl border border-[#e6eaf5] bg-white p-5 shadow-[0_12px_30px_rgba(20,27,44,0.04)]">
+            <h3 class="text-lg font-semibold text-[#141b2c]">Footer</h3>
+            <div class="mt-4 grid gap-4 xl:grid-cols-2">
+                <textarea name="footer_description" rows="4" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm xl:col-span-2" placeholder="Deskripsi footer">{{ old('footer_description', $content->footer_description) }}</textarea>
+                <div class="rounded-2xl border border-[#e6eaf5] bg-[#f9f9ff] p-3 xl:col-span-2">
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#64708b]">Preview Logo Footer</p>
+                    <img src="{{ $content->footer_logo_path ? asset($content->footer_logo_path) : asset('images/logo.png') }}" alt="Preview logo footer" class="h-24 rounded-xl bg-white object-contain p-2">
+                    <input type="file" name="footer_logo" accept="image/*" class="mt-3 w-full rounded-xl border border-dashed border-[#d9def1] px-4 py-3 text-sm">
+                </div>
+                <input name="footer_primary_label" value="{{ old('footer_primary_label', $content->footer_primary_label) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label tombol utama footer">
+                <input name="footer_primary_url" value="{{ old('footer_primary_url', $content->footer_primary_url) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL tombol utama footer">
+                <input name="footer_secondary_label" value="{{ old('footer_secondary_label', $content->footer_secondary_label) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label tombol kedua footer">
+                <input name="footer_secondary_url" value="{{ old('footer_secondary_url', $content->footer_secondary_url) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL tombol kedua footer">
+                <input name="footer_menu_title" value="{{ old('footer_menu_title', $content->footer_menu_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul menu footer">
+                <input name="footer_contact_title" value="{{ old('footer_contact_title', $content->footer_contact_title) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Judul kontak footer">
+                @foreach (old('footer_menu_items', $content->footer_menu_items ?? []) as $index => $item)
+                    <div class="rounded-2xl border border-[#e6eaf5] p-4">
+                        <div class="mb-3 text-sm font-semibold text-[#64708b]">Menu Footer {{ $index + 1 }}</div>
+                        <input name="footer_menu_items[{{ $index }}][label]" value="{{ $item['label'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label menu">
+                        <input name="footer_menu_items[{{ $index }}][url]" value="{{ $item['url'] ?? '' }}" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL menu">
+                    </div>
+                @endforeach
+                <div class="xl:col-span-2 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+                    @foreach (old('footer_contact_items', $content->footer_contact_items ?? []) as $index => $item)
+                        <input name="footer_contact_items[]" value="{{ $item }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Kontak {{ $index + 1 }}">
+                    @endforeach
+                </div>
+                <input name="footer_copyright" value="{{ old('footer_copyright', $content->footer_copyright) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Copyright, pakai :year untuk tahun">
+                <input name="footer_tagline" value="{{ old('footer_tagline', $content->footer_tagline) }}" class="rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Tagline footer">
+            </div>
+        </section>
+
+        <button class="rounded-xl bg-[#0043c6] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#003ab1]">Simpan CMS Beranda</button>
+    </form>
+
+    <script>
+        window.renumberProgramPoints = function (programItem) {
+            const index = programItem.dataset.programIndex;
+            programItem.querySelectorAll('.program-point-row').forEach((row, pointIndex) => {
+                const inputs = row.querySelectorAll('input');
+                inputs[0].name = `program_items[${index}][points][${pointIndex}][title]`;
+                inputs[0].placeholder = `Poin ${pointIndex + 1}`;
+                inputs[1].name = `program_items[${index}][points][${pointIndex}][description]`;
+            });
+        }
+
+        window.addProgramPoint = function (programItem) {
+            const points = programItem.querySelector('.program-points');
+            const row = document.createElement('div');
+            row.className = 'program-point-row rounded-xl border border-dashed border-[#d9def1] p-3';
+            row.innerHTML = `<input class="mb-2 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm"><input class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Deskripsi poin"><button type="button" onclick="window.removeProgramPoint(this)" class="mt-2 text-sm font-semibold text-rose-500">Hapus</button>`;
+            points.appendChild(row);
+            window.renumberProgramPoints(programItem);
+        }
+
+        window.removeProgramPoint = function (button) {
+            const programItem = button.closest('.program-item');
+            const points = programItem.querySelector('.program-points');
+            if (points.children.length === 1) {
+                points.querySelectorAll('input').forEach((input) => input.value = '');
+                return;
+            }
+
+            button.closest('.program-point-row').remove();
+            window.renumberProgramPoints(programItem);
+        }
+
+        window.renumberGalleryItems = function () {
+            document.querySelectorAll('#gallery-items .gallery-item').forEach((item, index) => {
+                item.querySelector('span').textContent = `Item Galeri ${index + 1}`;
+                item.querySelectorAll('input').forEach((input) => {
+                    if (input.name.startsWith('gallery_items[')) {
+                        input.name = input.name.replace(/gallery_items\[\d+\]/, `gallery_items[${index}]`);
+                    }
+                    if (input.name.startsWith('gallery_images[')) {
+                        input.name = `gallery_images[${index}]`;
+                    }
+                });
+            });
+        };
+        window.addGalleryItem = function () {
+            const container = document.getElementById('gallery-items');
+            const index = container.querySelectorAll('.gallery-item').length;
+            const div = document.createElement('div');
+            div.className = 'rounded-2xl border border-[#e6eaf5] p-4 gallery-item';
+            div.innerHTML = `<div class="mb-3 flex items-center justify-between gap-3 text-sm font-semibold text-[#64708b]"><span>Item Galeri ${index + 1}</span><button type="button" onclick="this.closest('.gallery-item').remove(); window.renumberGalleryItems()" class="text-rose-500">Hapus</button></div><input name="gallery_items[${index}][label]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label"><input name="gallery_items[${index}][badge]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Badge"><img src="{{ asset('images/no-bg-hero.png') }}" alt="Preview gallery baru" class="mb-3 h-32 w-full rounded-xl bg-[#f9f9ff] object-cover"><input type="file" name="gallery_images[${index}]" accept="image/*" class="w-full rounded-xl border border-dashed border-[#d9def1] px-4 py-3 text-sm">`;
+            container.appendChild(div);
+        };
+        window.renumberTestimonialItems = function () {
+            document.querySelectorAll('#testimonial-items .testimonial-item').forEach((item, index) => {
+                item.querySelector('span').textContent = `Testimoni ${index + 1}`;
+                item.querySelectorAll('input, textarea').forEach((input) => {
+                    if (input.name.startsWith('testimonials[')) {
+                        input.name = input.name.replace(/testimonials\[\d+\]/, `testimonials[${index}]`);
+                    }
+                    if (input.name.startsWith('testimonial_images[')) {
+                        input.name = `testimonial_images[${index}]`;
+                    }
+                });
+            });
+        };
+        window.addTestimonialItem = function () {
+            const container = document.getElementById('testimonial-items');
+            const index = container.querySelectorAll('.testimonial-item').length;
+            const div = document.createElement('div');
+            div.className = 'rounded-2xl border border-[#e6eaf5] p-4 testimonial-item';
+            div.innerHTML = `<div class="mb-3 flex items-center justify-between gap-3 text-sm font-semibold text-[#64708b]"><span>Testimoni ${index + 1}</span><button type="button" onclick="this.closest('.testimonial-item').remove(); window.renumberTestimonialItems()" class="text-rose-500">Hapus</button></div><input name="testimonials[${index}][name]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Nama"><input name="testimonials[${index}][role]" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Role"><textarea name="testimonials[${index}][quote]" rows="4" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Quote"></textarea><img src="{{ asset('images/logo.png') }}" alt="Preview testimoni baru" class="mb-3 h-32 w-full rounded-xl bg-[#f9f9ff] object-cover"><input type="file" name="testimonial_images[${index}]" accept="image/*" class="w-full rounded-xl border border-dashed border-[#d9def1] px-4 py-3 text-sm">`;
+            container.appendChild(div);
+        };
+    </script>
+</x-layouts.admin>
+

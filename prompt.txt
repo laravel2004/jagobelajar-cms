@@ -1,0 +1,12 @@
+buatkan issue.md yang berisi perencanaan untuk nanti di implementasi
+oleh junior programmer atau ai model yang lebih murah
+
+isi dari planning nya adalah sebagai berikut
+1. buatkan api baru di C:\dev\irt-quiz daftar ke sesi ujian dengan previllage di sesi itu premium ya.
+2. inti nya hampir sama dengan api untuk action tryout "Daftar paket gratis" tapi bedanya ini previllage nya premium di sesi itu ya.
+3. terapkan endpoint ini di action daftar paket premium di halaman detail tryout di project ini
+4. tapi sebelum itu masukkan ke payment gateway dulu ya, jadi user harus bayar dulu baru bisa daftar ke sesi ujian premium itu.
+5. setelah user berhasil membayar, baru bisa daftar ke sesi ujian premium itu. jadi otomatis setelah bayar langsung hit endpoint itu ya.
+
+
+buatkan tahapan tahapan yang harus direncanakan untuk implementasifitur fitur ini, jelaskan secara detail apa yang harus dilakukan pada setiap tahapan.

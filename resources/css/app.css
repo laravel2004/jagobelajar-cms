@@ -1,0 +1,13 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html { font-family: Montserrat, ui-sans-serif, system-ui, sans-serif; }
+    body { @apply bg-[#f9f9ff] text-[#141b2c]; }
+}
+
+@layer components {
+    .jb-card { @apply rounded-2xl bg-white shadow-sm ring-1 ring-[#e9edff]; }
+    .jb-container { @apply mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8; }
+}
