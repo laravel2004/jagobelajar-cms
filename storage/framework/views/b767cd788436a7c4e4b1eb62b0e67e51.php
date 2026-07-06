@@ -14,7 +14,7 @@
                 <h1 class="text-3xl font-extrabold tracking-tight text-[#141b2c] sm:text-4xl">Blog</h1>
                 <p class="mt-3 text-sm leading-7 text-[#5f667d] sm:text-base">Kumpulan artikel, tips belajar, dan panduan ringan untuk membantu siswa belajar lebih efektif.</p>
             </div>
-            <div class="mt-8 grid gap-6 lg:grid-cols-3">
+            <div class="mt-8 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
                 <?php $__empty_1 = true; $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <article class="overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff]">
                         <a href="<?php echo e(route('blog.detail', $post->slug)); ?>" class="block">

@@ -79,7 +79,7 @@ class BimbelCheckoutController extends Controller
 
     public function success(Request $request, Payment $payment): View|RedirectResponse
     {
-        if ($request->user()?->id !== $payment->user_id) {
+        if ($request->user()?->id !== $payment->user_id && $request->query('order_id') !== $payment->order_id) {
             abort(403);
         }
 

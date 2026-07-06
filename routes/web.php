@@ -22,6 +22,8 @@ Route::get('/tryout', [PublicPageController::class, 'tryout'])->name('tryout.ind
 Route::get('/tryout/{slug}', [PublicPageController::class, 'tryoutDetail'])->name('tryout.detail');
 Route::get('/bimbel', [PublicPageController::class, 'bimbel'])->name('bimbel.index');
 Route::get('/bimbel/{slug}', [PublicPageController::class, 'bimbelDetail'])->name('bimbel.detail');
+Route::get('/bimbel/payment/success/{payment}', [BimbelCheckoutController::class, 'success'])->name('bimbel.payment.success');
+Route::get('/tryout/payment/success/{payment}', [TryoutCheckoutController::class, 'success'])->name('tryout.payment.success');
 Route::get('/forum', [PublicPageController::class, 'forum'])->name('forum.index');
 Route::get('/keunggulan', [PublicPageController::class, 'keunggulan'])->name('keunggulan.index');
 Route::get('/blog', [PublicPageController::class, 'blog'])->name('blog.index');
@@ -35,9 +37,7 @@ Route::match(['get', 'post'], '/midtrans/notification', [MidtransNotificationCon
 Route::middleware('auth')->group(function () {
     Route::get('/user/dashboard', UserDashboardController::class)->name('user.dashboard');
     Route::post('/bimbel/{bimbel}/checkout', [BimbelCheckoutController::class, 'store'])->name('bimbel.checkout');
-    Route::get('/bimbel/payment/success/{payment}', [BimbelCheckoutController::class, 'success'])->name('bimbel.payment.success');
     Route::post('/tryout/{examSession}/checkout', [TryoutCheckoutController::class, 'store'])->name('tryout.checkout');
-    Route::get('/tryout/payment/success/{payment}', [TryoutCheckoutController::class, 'success'])->name('tryout.payment.success');
     Route::post('/tryout/{examSession}/free-package-register', [FreePackageRegistrationController::class, 'store'])->name('tryout.free-register');
 });
 Route::get('/admin/dashboard', AdminDashboardController::class)->name('admin.dashboard');

@@ -27,7 +27,7 @@
 
             <div class="divide-y divide-[#e9edff]">
                 <?php $__empty_1 = true; $__currentLoopData = $posts; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $post): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <div class="flex flex-col gap-4 p-6 md:flex-row md:items-center md:justify-between">
+                    <div class="flex flex-col gap-4 p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
                         <div class="min-w-0">
                             <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#8a93a8]"><?php echo e($post->published_at?->translatedFormat('d F Y') ?? '-'); ?> · <?php echo e($post->reading_minutes); ?> menit</p>
                             <h2 class="mt-2 text-xl font-extrabold text-[#141b2c]"><?php echo e($post->title); ?></h2>
