@@ -21,6 +21,14 @@ class FreePackageRegistrationController extends Controller
             return back()->withErrors(['register' => 'Paket gratis tidak tersedia untuk sesi ini.']);
         }
 
+        $request->validate([
+            'proof_follow' => ['required', 'image', 'max:4096'],
+            'proof_comment' => ['required', 'image', 'max:4096'],
+        ]);
+
+        $proofFollowPath = $request->file('proof_follow')->store('proofs/follow', 'public');
+        $proofCommentPath = $request->file('proof_comment')->store('proofs/comment', 'public');
+
         $endpoint = rtrim(config('services.irt_quiz.exam_session_register_endpoint'), '/').'/'.$examSession->source_code.'/register';
         $user = $request->user();
 
@@ -56,6 +64,8 @@ class FreePackageRegistrationController extends Controller
                 'registered_at' => now(),
                 'external_session_id' => $examSession->external_id,
                 'join_url' => $joinUrl,
+                'proof_follow_path' => $proofFollowPath,
+                'proof_comment_path' => $proofCommentPath,
             ]
         );
 

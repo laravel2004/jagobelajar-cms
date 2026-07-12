@@ -1,4 +1,4 @@
-﻿<x-layouts.public :title="($examSession->title ?? $examSession->name).' - '.config('app.name')">
+<x-layouts.public :title="($examSession->title ?? $examSession->name).' - '.config('app.name')">
 <div x-data="{ openFree: false }">
     @php($hasPromo = $examSession->is_promo_active && $examSession->sale_price !== null && $examSession->sale_price < $examSession->price)
     @php($displayPrice = $examSession->is_promo_active && $examSession->sale_price !== null ? $examSession->sale_price : $examSession->price)
@@ -84,7 +84,6 @@
                             <button class="inline-flex w-full justify-center rounded-2xl bg-[#feb700] px-5 py-4 text-sm font-extrabold text-[#271900] shadow-[0_14px_24px_rgba(254,183,0,0.22)] transition hover:-translate-y-0.5 hover:bg-[#ffca35]">Daftar Paket Premium</button>
                         </form>
                     </div>
-                    <p class="mt-4 text-center text-xs leading-5 text-[#737687]">Admin bisa lengkapi harga, gambar, dan deskripsi di dashboard sebelum publish.</p>
                 </aside>
             </div>
         </div>
@@ -99,13 +98,23 @@
                     </div>
                     <button type="button" @click="openFree = false" class="text-[#8a93a8] transition hover:text-[#141b2c]">&larr;</button>
                 </div>
-                <div class="mt-6 flex gap-3">
-                    <button type="button" @click="openFree = false" class="inline-flex flex-1 justify-center rounded-2xl border border-[#d9def1] bg-white px-5 py-3 text-sm font-bold text-[#0043c6]">Batal</button>
-                    <form method="POST" action="{{ route('tryout.free-register', $examSession) }}" class="flex-1">
-                        @csrf
-                        <button class="inline-flex w-full justify-center rounded-2xl bg-[#0043c6] px-5 py-3 text-sm font-bold text-white">Ya, Daftarkan</button>
-                    </form>
-                </div>
+                <form method="POST" action="{{ route('tryout.free-register', $examSession) }}" enctype="multipart/form-data" class="mt-6">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="mb-2 block text-sm font-semibold text-[#141b2c]">Bukti Follow IG/TikTok</label>
+                        <input type="file" name="proof_follow" accept="image/*" required class="w-full rounded-xl border border-[#d9def1] px-4 py-3 text-sm">
+                        @error('proof_follow')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="mb-4">
+                        <label class="mb-2 block text-sm font-semibold text-[#141b2c]">Bukti Komen Postingan Jagobelajar</label>
+                        <input type="file" name="proof_comment" accept="image/*" required class="w-full rounded-xl border border-[#d9def1] px-4 py-3 text-sm">
+                        @error('proof_comment')<p class="mt-1 text-xs text-rose-500">{{ $message }}</p>@enderror
+                    </div>
+                    <div class="mt-6 flex gap-3">
+                        <button type="button" @click="openFree = false" class="inline-flex flex-1 justify-center rounded-2xl border border-[#d9def1] bg-white px-5 py-3 text-sm font-bold text-[#0043c6]">Batal</button>
+                        <button class="inline-flex flex-1 justify-center rounded-2xl bg-[#0043c6] px-5 py-3 text-sm font-bold text-white">Daftarkan Sekarang</button>
+                    </div>
+                </form>
             </div>
         </div>
 </div>

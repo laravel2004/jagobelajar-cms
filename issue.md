@@ -1,204 +1,64 @@
-﻿# Issue: Premium Tryout Flow + Auto Register ke irt-quiz
+# Implementasi Upload Bukti pada Pendaftaran Tryout Gratis
 
-## Tujuan
-Membuat flow **Daftar Paket Premium** pada detail tryout di project ini agar user harus membayar dulu, lalu setelah pembayaran berhasil user otomatis didaftarkan ke sesi ujian premium di project `C:\dev\irt-quiz`.
+## Latar Belakang
+Saat ini, ketika pengguna mengklik tombol "Daftar Paket Gratis" pada halaman detail tryout (misalnya `http://localhost:8000/tryout/...`), sistem memunculkan sebuah modal konfirmasi sederhana yang langsung mengeksekusi pendaftaran jika diklik "Ya, Daftarkan".
+Kebutuhan bisnis yang baru mengharuskan pengguna yang mendaftar paket gratis untuk mengunggah dua buah bukti:
+1. Bukti follow Instagram (IG) atau TikTok Jagobelajar.
+2. Bukti komentar pada postingan Jagobelajar.
 
-## Scope Fitur
-- Buat endpoint baru di `C:\dev\irt-quiz` untuk daftar ke sesi ujian dengan privilege **premium**.
-- Integrasikan endpoint tersebut ke tombol **Daftar Paket Premium** di detail tryout project ini.
-- User harus checkout dan membayar dulu sebelum registrasi premium dijalankan.
-- Setelah pembayaran berhasil, sistem otomatis memanggil endpoint premium di `irt-quiz`.
-- Jika pembayaran gagal atau belum lunas, user tidak boleh didaftarkan.
+Issue ini berisi rancangan teknis (blueprint) untuk diimplementasikan oleh developer (Junior Programmer atau AI model).
 
 ---
 
-## Tahap 1 — Pelajari Flow Gratis yang Sudah Ada
+## Tahapan Implementasi
 
-### Yang harus dicek di project ini
-- `app/Http/Controllers/FreePackageRegistrationController.php`
-- `resources/views/pages/public/tryout-detail.blade.php`
-- `resources/views/pages/user/dashboard.blade.php`
-- tabel `user_packages`
+### 1. Update Database Schema & Model (Backend)
+Kita perlu tempat untuk menyimpan path (lokasi file) dari gambar bukti yang di-upload oleh user. Data pendaftaran tryout saat ini disimpan di tabel `user_packages`.
+- **Buat Migration:** Buat migration baru (contoh: `php artisan make:migration add_proofs_to_user_packages_table`).
+- **Isi Migration:** Tambahkan kolom `proof_follow_path` (string, nullable) dan `proof_comment_path` (string, nullable) ke dalam tabel `user_packages`.
+- **Update Model:** Buka `app/Models/UserPackage.php` dan tambahkan `proof_follow_path` serta `proof_comment_path` ke dalam properti `$fillable`.
 
-### Yang harus dicek di `C:\dev\irt-quiz`
-- endpoint public daftar sesi ujian gratis yang sudah ada
-- controller yang menangani registrasi peserta
-- field apa yang dibutuhkan untuk registrasi premium
+### 2. Penyesuaian View Modal Pendaftaran (Frontend)
+Kita perlu merombak modal konfirmasi agar menampilkan field upload file.
+- **File Target:** Buka `resources/views/pages/public/tryout-detail.blade.php`.
+- **Cari Modal:** Cari bagian yang memiliki atribut `x-show="openFree"`.
+- **Modifikasi Form:** 
+  - Pastikan tag `<form>` memiliki atribut `enctype="multipart/form-data"` agar dapat memproses upload file.
+  - Tambahkan label dan input untuk Bukti Follow: `<input type="file" name="proof_follow" accept="image/*" required>`.
+  - Tambahkan label dan input untuk Bukti Komen: `<input type="file" name="proof_comment" accept="image/*" required>`.
+  - Styling input-input tersebut agar serasi dengan desain form menggunakan utility class Tailwind CSS yang sudah digunakan di halaman tersebut (misalnya menambahkan class `rounded-xl`, `border`, `px-4`, `py-3`, dll).
 
-### Output tahap ini
-Pahami perbedaan antara flow gratis dan flow premium, terutama:
-- payload request
-- privilege/role peserta
-- behavior setelah berhasil daftar
+### 3. Penanganan Upload File & Validasi di Controller (Backend)
+Setelah form dikirim, backend harus memvalidasi gambar, menyimpannya, lalu menyambungkannya dengan catatan `UserPackage` yang baru.
+- **File Target:** Buka `app/Http/Controllers/FreePackageRegistrationController.php`.
+- **Validasi Request:** Pada method `store`, sebelum melakukan request ke service eksternal, tambahkan validasi untuk memastikan gambar diunggah dengan benar:
+  ```php
+  $request->validate([
+      'proof_follow' => ['required', 'image', 'max:4096'],
+      'proof_comment' => ['required', 'image', 'max:4096'],
+  ]);
+  ```
+- **Simpan File (Storage):** 
+  ```php
+  $proofFollowPath = $request->file('proof_follow')->store('proofs/follow', 'public');
+  $proofCommentPath = $request->file('proof_comment')->store('proofs/comment', 'public');
+  ```
+- **Update Penyimpanan Database:** Pada bagian di mana `UserPackage::updateOrCreate(...)` dieksekusi, tambahkan pengisian data bukti tersebut:
+  ```php
+  UserPackage::updateOrCreate(
+      [ ... ],
+      [
+          // ... field-field sebelumnya
+          'proof_follow_path' => $proofFollowPath,
+          'proof_comment_path' => $proofCommentPath,
+      ]
+  );
+  ```
 
----
-
-## Tahap 2 — Tambahkan Endpoint Premium di `irt-quiz`
-
-### Yang harus dibuat di `C:\dev\irt-quiz`
-- route baru di `routes/api.php`
-- method baru di controller public/session controller
-
-### Contoh tujuan endpoint
-Endpoint ini harus menerima request seperti flow gratis, tetapi menambahkan privilege premium pada sesi yang dituju.
-
-### Aturan penting
-- Endpoint tetap public, tidak perlu login.
-- Endpoint harus mengecek apakah email user sudah ada.
-- Jika user belum ada, buat user baru dari data profil yang dikirim.
-- Jika user sudah ada, langsung daftarkan ke sesi premium.
-- Tambahkan penanda privilege premium pada data pendaftaran.
-
-### Output tahap ini
-Endpoint baru yang siap dipanggil dari project CMS ini.
-
----
-
-## Tahap 3 — Tambahkan Konfigurasi Endpoint di Project Ini
-
-### File yang perlu diubah
-- `.env.example`
-- `.env`
-- `config/services.php`
-
-### Tambahkan env
-Misalnya:
-
-```env
-IRT_QUIZ_PREMIUM_REGISTER_ENDPOINT=http://127.0.0.1:8001/api/public/exam-sessions
-```
-
-### Tujuan
-Supaya URL endpoint premium tidak hardcode dan bisa diganti dengan mudah.
+### 4. Hal Tambahan & Testing (QA)
+- **Symlink Storage:** Jika environment lokal belum memiliki symlink ke public folder, jalankan command `php artisan storage:link`.
+- **Tampilkan Error:** Pastikan view menampilkan error validasi (`$errors->first('proof_follow')`) bila user salah upload gambar.
+- **Verifikasi Admin (Opsional):** Jika paket gratis yang mengunggah bukti perlu "Pending Verification" dari admin, maka sesuaikan logika call ke API `irt_quiz` agar dilakukan hanya setelah disetujui admin. Jika hanya butuh pencatatan saja (seperti sistem sekarang), lanjutkan integrasi API seperti biasa.
 
 ---
-
-## Tahap 4 — Siapkan Flow Payment Premium
-
-### Yang harus dipakai
-Gunakan flow payment yang sudah dibuat untuk bimbel sebagai referensi utama.
-
-### Hal yang harus direncanakan
-- Tombol **Daftar Paket Premium** di detail tryout harus memulai checkout.
-- User login wajib sebelum checkout.
-- Setelah pembayaran berhasil, sistem memanggil endpoint premium ke `irt-quiz`.
-- Hanya user yang sudah paid yang boleh didaftarkan ke sesi premium.
-
-### Output tahap ini
-Alur checkout premium yang jelas sebelum registrasi otomatis dijalankan.
-
----
-
-## Tahap 5 — Buat Tracking Order Premium
-
-### Yang harus disiapkan
-Simpan transaksi premium ke tabel payment/order yang sudah ada atau buat jika belum ada.
-
-### Data minimal
-- `user_id`
-- `package_type` = `tryout`
-- `package_id`
-- `order_id`
-- `gross_amount`
-- `payment_status`
-- `paid_at`
-
-### Kenapa perlu
-Agar sistem bisa tahu kapan pembayaran benar-benar berhasil sebelum daftar ke sesi premium.
-
----
-
-## Tahap 6 — Auto Register Setelah Payment Berhasil
-
-### Alur yang harus dibuat
-1. User klik **Daftar Paket Premium**.
-2. Sistem membuat transaksi payment.
-3. User menyelesaikan pembayaran.
-4. Payment gateway mengirim status berhasil.
-5. Sistem memanggil endpoint premium di `irt-quiz`.
-6. Jika endpoint sukses, simpan ke `user_packages`.
-7. Tampilkan hasil sukses ke user.
-
-### Catatan implementasi
-- Panggilan ke `irt-quiz` harus dilakukan **setelah** status pembayaran sukses.
-- Jika request ke `irt-quiz` gagal, simpan log error dan tampilkan pesan yang jelas.
-- Jangan daftarkan user sebelum payment confirmed.
-
----
-
-## Tahap 7 — Update Tombol di Detail Tryout
-
-### File yang diubah
-- `resources/views/pages/public/tryout-detail.blade.php`
-
-### Yang harus dilakukan
-- Tombol **Daftar Paket Premium** tidak lagi dummy.
-- Tombol memicu flow checkout premium.
-- Setelah bayar sukses, user otomatis didaftarkan ke sesi premium.
-
-### Acceptance
-- User guest tetap diarahkan ke login.
-- User login bisa checkout.
-- Setelah paid, registrasi premium otomatis berjalan.
-
----
-
-## Tahap 8 — Update Paket Terdaftar di Dashboard
-
-### File yang diubah
-- `resources/views/pages/user/dashboard.blade.php`
-- `app/Http/Controllers/UserDashboardController.php`
-
-### Yang harus dilakukan
-- Paket premium tryout tetap muncul di `Paket Terdaftar`.
-- Tombol untuk tryout premium tetap **Masuk ke Ujian**.
-- Pastikan `join_url` atau link masuk ke sesi premium tersimpan saat registrasi berhasil.
-
-### Catatan
-Jika premium memakai URL khusus dari `irt-quiz`, simpan URL itu ke `user_packages.join_url`.
-
----
-
-## Tahap 9 — Validasi dan Error Handling
-
-### Yang harus diperiksa
-- Payment gagal
-- Callback payment tidak masuk
-- Endpoint premium `irt-quiz` down
-- User sudah terdaftar sebelumnya
-
-### Perilaku yang disarankan
-- Jika payment gagal, jangan daftar ke sesi premium.
-- Jika user sudah terdaftar, jangan dobel insert.
-- Jika endpoint premium gagal, simpan error log dan tampilkan pesan ringan ke user.
-
----
-
-## Tahap 10 — Testing Manual
-
-### Skenario sukses
-1. Buka detail tryout.
-2. Klik **Daftar Paket Premium**.
-3. Login jika belum login.
-4. Selesaikan pembayaran.
-5. Pastikan otomatis terdaftar ke sesi premium di `irt-quiz`.
-6. Pastikan paket muncul di dashboard user.
-
-### Skenario gagal
-- payment gagal
-- payment pending
-- endpoint `irt-quiz` tidak bisa diakses
-- user sudah pernah daftar
-
-### Output tahap ini
-Memastikan flow end-to-end berjalan tanpa registrasi sebelum payment sukses.
-
----
-
-## Acceptance Criteria
-- Endpoint premium baru tersedia di `C:\dev\irt-quiz`.
-- Flow premium di detail tryout mengharuskan payment dulu.
-- Setelah payment berhasil, user otomatis didaftarkan ke sesi premium.
-- Paket premium muncul di dashboard user.
-- Tidak ada registrasi premium sebelum pembayaran confirmed.
-- Semua URL penting disimpan di `.env`.
+Silakan ikuti instruksi di atas secara bertahap (step-by-step) untuk mengimplementasikan fitur tersebut. Pastikan untuk selalu melakukan testing setelah menyelesaikan setiap tahapan.

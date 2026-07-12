@@ -85,7 +85,8 @@
                         <input name="program_items[{{ $index }}][button]" value="{{ $item['button'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Label tombol">
                         <input name="program_items[{{ $index }}][border]" value="{{ $item['border'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class border">
                         <input name="program_items[{{ $index }}][color]" value="{{ $item['color'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class text">
-                        <input name="program_items[{{ $index }}][background]" value="{{ $item['background'] ?? '' }}" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class background">
+                        <input name="program_items[{{ $index }}][background]" value="{{ $item['background'] ?? '' }}" class="mb-3 w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="Class background">
+                        <input name="program_items[{{ $index }}][url]" value="{{ $item['url'] ?? '' }}" class="w-full rounded-xl border-[#d9def1] px-4 py-3 text-sm" placeholder="URL redirect">
                         <div class="mt-4 space-y-3 program-points">
                             @foreach (array_values($points) as $pointIndex => $point)
                                 <div class="program-point-row rounded-xl border border-dashed border-[#d9def1] p-3">

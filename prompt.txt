@@ -2,11 +2,10 @@ buatkan issue.md yang berisi perencanaan untuk nanti di implementasi
 oleh junior programmer atau ai model yang lebih murah
 
 isi dari planning nya adalah sebagai berikut
-1. buatkan api baru di C:\dev\irt-quiz daftar ke sesi ujian dengan previllage di sesi itu premium ya.
-2. inti nya hampir sama dengan api untuk action tryout "Daftar paket gratis" tapi bedanya ini previllage nya premium di sesi itu ya.
-3. terapkan endpoint ini di action daftar paket premium di halaman detail tryout di project ini
-4. tapi sebelum itu masukkan ke payment gateway dulu ya, jadi user harus bayar dulu baru bisa daftar ke sesi ujian premium itu.
-5. setelah user berhasil membayar, baru bisa daftar ke sesi ujian premium itu. jadi otomatis setelah bayar langsung hit endpoint itu ya.
+1. lihat di halaman ini http://localhost:8000/tryout/tryout-tka-sd-batch-1-jziprij9
+2. disitu kan ada daftar gratis ya.
+3. nah untuk daftar gratis itu kalau diklik tidak langsung action ya tapi memunculkan modal ya.
+4. isi dari modal nya adalah upload bukti follow ig atau tiktok dan bukti komen di postingan jagobelajar 
 
 
 buatkan tahapan tahapan yang harus direncanakan untuk implementasifitur fitur ini, jelaskan secara detail apa yang harus dilakukan pada setiap tahapan.
