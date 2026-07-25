@@ -1,4 +1,4 @@
-﻿<?php if (isset($component)) { $__componentOriginalc8c9fd5d7827a77a31381de67195f0c3 = $component; } ?>
+<?php if (isset($component)) { $__componentOriginalc8c9fd5d7827a77a31381de67195f0c3 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginalc8c9fd5d7827a77a31381de67195f0c3 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.layouts.admin','data' => ['title' => 'Sesi Ujian - '.config('app.name')]] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('layouts.admin'); ?>
@@ -27,10 +27,10 @@
                 </div>
             </div>
             <div class="grid gap-px bg-[#e9edff] grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
-                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Total Sesi</p><p class="mt-2 text-3xl font-extrabold text-[#141b2c]"><?php echo e($examSessions->count()); ?></p></div>
-                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Published</p><p class="mt-2 text-3xl font-extrabold text-emerald-600"><?php echo e($examSessions->where('status', 'active')->count()); ?></p></div>
-                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Draft</p><p class="mt-2 text-3xl font-extrabold text-amber-500"><?php echo e($examSessions->where('status', 'draft')->count()); ?></p></div>
-                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Inactive</p><p class="mt-2 text-3xl font-extrabold text-slate-500"><?php echo e($examSessions->where('status', 'inactive')->count()); ?></p></div>
+                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Total Sesi</p><p class="mt-2 text-3xl font-extrabold text-[#141b2c]"><?php echo e($totalSessions); ?></p></div>
+                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Published</p><p class="mt-2 text-3xl font-extrabold text-emerald-600"><?php echo e($publishedCount); ?></p></div>
+                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Draft</p><p class="mt-2 text-3xl font-extrabold text-amber-500"><?php echo e($draftCount); ?></p></div>
+                <div class="bg-white p-5"><p class="text-xs font-bold uppercase tracking-[0.18em] text-[#8a93a8]">Inactive</p><p class="mt-2 text-3xl font-extrabold text-slate-500"><?php echo e($inactiveCount); ?></p></div>
             </div>
         </section>
 
@@ -42,12 +42,28 @@
         <?php endif; ?>
 
         <section class="rounded-[2rem] bg-white p-4 shadow-[0_14px_45px_rgba(20,27,44,0.06)] ring-1 ring-[#e6eaf5] sm:p-5">
-            <div class="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div class="mb-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h3 class="text-lg font-extrabold text-[#141b2c]">Daftar Sesi</h3>
                     <p class="text-sm text-[#8a93a8]">Urut berdasarkan tanggal mulai terbaru dari irt-quiz.</p>
                 </div>
-                <span class="rounded-full bg-[#f1f3ff] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#0043c6]"><?php echo e($examSessions->count()); ?> Item</span>
+                
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <form action="<?php echo e(route('admin.exam-sessions.index')); ?>" method="GET" class="relative flex-1 sm:min-w-[300px]">
+                        <input type="text" name="search" value="<?php echo e(request('search')); ?>" placeholder="Cari sesi ujian..." class="w-full rounded-2xl border border-[#e6eaf5] bg-[#f9f9ff] py-2.5 pl-10 pr-10 text-sm text-[#141b2c] transition focus:border-[#0043c6] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0043c6]">
+                        <svg class="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8a93a8]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                        <?php if(request('search')): ?>
+                            <a href="<?php echo e(route('admin.exam-sessions.index')); ?>" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8a93a8] hover:text-[#141b2c]">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </a>
+                        <?php endif; ?>
+                    </form>
+                    <span class="hidden sm:inline-flex rounded-full bg-[#f1f3ff] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#0043c6] whitespace-nowrap"><?php echo e($examSessions->total()); ?> Item</span>
+                </div>
             </div>
 
             <div class="overflow-hidden rounded-3xl border border-[#e6eaf5]">
@@ -109,6 +125,10 @@
                         </div>
                     <?php endif; ?>
                 </div>
+            </div>
+            <div class="mt-6">
+                <?php echo e($examSessions->links()); ?>
+
             </div>
         </section>
     </div>

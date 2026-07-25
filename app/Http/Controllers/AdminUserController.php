@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 
 class AdminUserController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = $request->input('search');
+
         return view('pages.admin.users.index', [
             'users' => User::query()
+                ->when($search, function ($query, $search) {
+                    $query->where('name', 'like', "%{$search}%")
+                          ->orWhere('email', 'like', "%{$search}%");
+                })
                 ->withCount('packages')
                 ->latest()
-                ->paginate(12),
+                ->paginate(12)
+                ->withQueryString(),
+            'search' => $search,
         ]);
     }
 

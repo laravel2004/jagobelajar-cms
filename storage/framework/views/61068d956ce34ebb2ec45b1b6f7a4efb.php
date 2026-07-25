@@ -7,10 +7,26 @@
     <title><?php echo e($title ?? 'Admin - '.config('app.name')); ?></title>
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
 </head>
-<body class="bg-slate-100 text-slate-900 antialiased">
+<body class="bg-slate-100 text-slate-900 antialiased"
+      x-data="{ sidebarOpen: window.innerWidth >= 1024 }"
+      @resize.window="
+          if (window.innerWidth >= 1024) {
+              sidebarOpen = true;
+              document.body.classList.remove('overflow-hidden');
+          } else {
+              sidebarOpen = false;
+          }
+      "
+      x-init="
+          $watch('sidebarOpen', value => {
+              if (window.innerWidth < 1024) {
+                  document.body.classList.toggle('overflow-hidden', value);
+              }
+          })
+      ">
     <div class="min-h-screen overflow-x-hidden lg:flex">
         <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
-        <div class="min-w-0 flex-1 lg:pl-72">
+        <div class="min-h-screen min-w-0 flex-1 transition-all duration-200" :class="sidebarOpen ? 'lg:pl-72' : ''">
             <?php echo $__env->make('components.admin-topbar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
             <main class="p-4 sm:p-6 lg:p-8">
                 <?php echo e($slot); ?>
@@ -18,6 +34,7 @@
             </main>
         </div>
     </div>
+    <?php echo $__env->yieldPushContent('scripts'); ?>
 </body>
 </html>
 <?php /**PATH /Users/laravel2004/dev/jagobelajar-cms/resources/views/components/layouts/admin.blade.php ENDPATH**/ ?>

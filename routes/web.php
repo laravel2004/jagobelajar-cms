@@ -13,6 +13,7 @@ use App\Http\Controllers\AdminHomeContentController;
 use App\Http\Controllers\PublicPageController;
 use App\Http\Controllers\UserDashboardController;
 use App\Http\Controllers\FreePackageRegistrationController;
+use App\Http\Controllers\BundleCheckoutController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicPageController::class, 'home'])->name('home');
@@ -20,6 +21,12 @@ Route::get('/materi', [PublicPageController::class, 'materials'])->name('materia
 Route::get('/latihan-soal', [PublicPageController::class, 'quizzes'])->name('quizzes.index');
 Route::get('/tryout', [PublicPageController::class, 'tryout'])->name('tryout.index');
 Route::get('/tryout/{slug}', [PublicPageController::class, 'tryoutDetail'])->name('tryout.detail');
+Route::post('/tryout/{examSession}/free-package-register', [FreePackageRegistrationController::class, 'store'])->name('tryout.free-register');
+
+Route::get('/tryout/bundle/{slug}', [PublicPageController::class, 'bundleDetail'])->name('tryout.bundle.detail');
+Route::post('/tryout/bundle/{slug}/checkout', [BundleCheckoutController::class, 'store'])->name('tryout.bundle.checkout');
+Route::post('/tryout/bundle/{slug}/free-package-register', [\App\Http\Controllers\BundleFreeRegistrationController::class, 'store'])->name('tryout.bundle.free-register');
+Route::get('/tryout/bundle/payment/{payment:order_id}/success', [BundleCheckoutController::class, 'success'])->name('bundle.payment.success');
 Route::get('/bimbel', [PublicPageController::class, 'bimbel'])->name('bimbel.index');
 Route::get('/bimbel/{slug}', [PublicPageController::class, 'bimbelDetail'])->name('bimbel.detail');
 Route::get('/bimbel/payment/success/{payment}', [BimbelCheckoutController::class, 'success'])->name('bimbel.payment.success');
@@ -58,3 +65,10 @@ Route::get('/admin/sesi-ujian', [AdminExamSessionController::class, 'index'])->n
 Route::post('/admin/sesi-ujian/fetch', [AdminExamSessionController::class, 'fetch'])->name('admin.exam-sessions.fetch');
 Route::get('/admin/sesi-ujian/{examSession}/edit', [AdminExamSessionController::class, 'edit'])->name('admin.exam-sessions.edit');
 Route::put('/admin/sesi-ujian/{examSession}', [AdminExamSessionController::class, 'update'])->name('admin.exam-sessions.update');
+
+use App\Http\Controllers\AdminExamBundleController;
+Route::get('/admin/paket-bundle', [AdminExamBundleController::class, 'index'])->name('admin.exam-bundles.index');
+Route::get('/admin/paket-bundle/create', [AdminExamBundleController::class, 'create'])->name('admin.exam-bundles.create');
+Route::post('/admin/paket-bundle', [AdminExamBundleController::class, 'store'])->name('admin.exam-bundles.store');
+Route::get('/admin/paket-bundle/{examBundle}/edit', [AdminExamBundleController::class, 'edit'])->name('admin.exam-bundles.edit');
+Route::put('/admin/paket-bundle/{examBundle}', [AdminExamBundleController::class, 'update'])->name('admin.exam-bundles.update');

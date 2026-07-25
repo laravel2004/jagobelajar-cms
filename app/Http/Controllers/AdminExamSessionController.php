@@ -12,11 +12,30 @@ use Illuminate\Support\Str;
 
 class AdminExamSessionController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        return view('pages.admin.exam-sessions.index', [
-            'examSessions' => ExamSession::query()->orderByDesc('starts_at')->latest()->get(),
-        ]);
+        $search = $request->input('search');
+
+        $totalSessions = ExamSession::count();
+        $publishedCount = ExamSession::where('status', 'active')->count();
+        $draftCount = ExamSession::where('status', 'draft')->count();
+        $inactiveCount = ExamSession::where('status', 'inactive')->count();
+
+        $examSessions = ExamSession::query()
+            ->when($search, function ($query, $search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('name', 'like', "%{$search}%");
+                });
+            })
+            ->orderByDesc('starts_at')
+            ->latest()
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('pages.admin.exam-sessions.index', compact(
+            'examSessions', 'totalSessions', 'publishedCount', 'draftCount', 'inactiveCount', 'search'
+        ));
     }
 
     public function fetch(Request $request): RedirectResponse

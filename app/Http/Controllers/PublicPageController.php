@@ -155,20 +155,25 @@ class PublicPageController extends Controller
                 ->orderBy('sort_order')
                 ->orderBy('starts_at')
                 ->get(),
+            'examBundles' => \App\Models\ExamBundle::query()
+                ->where('status', 'active')
+                ->orderBy('sort_order')
+                ->latest()
+                ->get(),
         ]);
     }
 
     public function bimbel(): View
     {
         return view('pages.public.bimbel', [
-            'bimbels' => Bimbel::query()->where('status', 'active')->orderBy('sort_order')->latest()->get(),
+            'bimbels' => \App\Models\Bimbel::query()->where('status', 'active')->orderBy('sort_order')->latest()->get(),
         ]);
     }
 
     public function bimbelDetail(string $slug): View
     {
         return view('pages.public.bimbel-detail', [
-            'bimbel' => Bimbel::query()->where('status', 'active')->where('slug', $slug)->firstOrFail(),
+            'bimbel' => \App\Models\Bimbel::query()->where('status', 'active')->where('slug', $slug)->firstOrFail(),
         ]);
     }
 
@@ -176,6 +181,17 @@ class PublicPageController extends Controller
     {
         return view('pages.public.tryout-detail', [
             'examSession' => ExamSession::query()
+                ->where('status', 'active')
+                ->where('slug', $slug)
+                ->firstOrFail(),
+        ]);
+    }
+
+    public function bundleDetail(string $slug): View
+    {
+        return view('pages.public.bundle-detail', [
+            'bundle' => \App\Models\ExamBundle::query()
+                ->with('sessions')
                 ->where('status', 'active')
                 ->where('slug', $slug)
                 ->firstOrFail(),

@@ -1,13 +1,18 @@
-<div id="admin-sidebar-overlay" onclick="document.getElementById('admin-sidebar').classList.add('-translate-x-full'); document.getElementById('admin-sidebar-overlay').classList.add('hidden'); document.body.classList.remove('overflow-hidden');" class="fixed inset-0 z-40 hidden bg-[#141b2c]/40 backdrop-blur-[1px] lg:hidden"></div>
+<div x-show="sidebarOpen" 
+     x-transition.opacity 
+     @click="sidebarOpen = false" 
+     class="fixed inset-0 z-40 bg-[#141b2c]/40 backdrop-blur-[1px] lg:hidden"
+     style="display: none;"></div>
 
-<aside id="admin-sidebar" class="fixed left-0 top-0 z-50 h-screen w-[86vw] max-w-72 -translate-x-full border-r border-[#e6eaf5] bg-white shadow-[24px_0_60px_rgba(20,27,44,0.16)] transition-transform duration-200 lg:translate-x-0 lg:shadow-none">
+<aside class="fixed left-0 top-0 z-50 h-screen w-[86vw] max-w-72 border-r border-[#e6eaf5] bg-white shadow-[24px_0_60px_rgba(20,27,44,0.16)] transition-transform duration-200 lg:shadow-none"
+       :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
     <div class="flex h-full flex-col">
         <div class="border-b border-[#e6eaf5] px-5 py-5">
             <div class="relative flex items-center justify-center">
                 <a href="{{ route('admin.dashboard') }}" class="flex justify-center">
                     <img src="{{ asset('images/logo.png') }}" alt="Jago Belajar" class="h-20 w-auto lg:h-24">
                 </a>
-                <button type="button" onclick="document.getElementById('admin-sidebar').classList.add('-translate-x-full'); document.getElementById('admin-sidebar-overlay').classList.add('hidden'); document.body.classList.remove('overflow-hidden');" class="absolute right-0 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-xl border border-[#d9def1] bg-white text-[#0043c6] transition hover:bg-[#f6f8ff] lg:hidden" aria-label="Tutup sidebar">
+                <button type="button" @click="sidebarOpen = false" class="absolute right-0 top-1/2 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-xl border border-[#d9def1] bg-white text-[#0043c6] transition hover:bg-[#f6f8ff] lg:hidden" aria-label="Tutup sidebar">
                     <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12" /><path d="M18 6L6 18" /></svg>
                 </button>
             </div>
@@ -24,6 +29,7 @@
             <a class="{{ request()->routeIs('admin.users.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.users.index') }}">User</a>
             <a class="{{ request()->routeIs('admin.bimbel.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.bimbel.index') }}">Bimbel</a>
             <a class="{{ request()->routeIs('admin.exam-sessions.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.exam-sessions.index') }}">Sesi Ujian</a>
+            <a class="{{ request()->routeIs('admin.exam-bundles.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.exam-bundles.index') }}">Paket Bundle</a>
         </nav>
 
         <div class="mt-auto border-t border-[#e6eaf5] p-4">

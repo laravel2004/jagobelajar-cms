@@ -23,4 +23,9 @@ class ExamSession extends Model
             'is_promo_active' => 'boolean','is_free_package_active' => 'boolean',
         ];
     }
+
+    public function bundles()
+    {
+        return $this->belongsToMany(ExamBundle::class, 'exam_bundle_session');
+    }
 }

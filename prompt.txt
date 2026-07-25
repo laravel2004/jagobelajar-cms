@@ -2,10 +2,10 @@ buatkan issue.md yang berisi perencanaan untuk nanti di implementasi
 oleh junior programmer atau ai model yang lebih murah
 
 isi dari planning nya adalah sebagai berikut
-1. lihat di halaman ini http://localhost:8000/tryout/tryout-tka-sd-batch-1-jziprij9
-2. disitu kan ada daftar gratis ya.
-3. nah untuk daftar gratis itu kalau diklik tidak langsung action ya tapi memunculkan modal ya.
-4. isi dari modal nya adalah upload bukti follow ig atau tiktok dan bukti komen di postingan jagobelajar 
+1. perhatikan http://127.0.0.1:8000/admin/sesi-ujian.
+2. aku ingin membuat paket bundle dengan ini ya.
+3. nanti ini akan perpengaruh di landing page tryout nya juga ya.
+4. nge hit api luar nya juga semua dengan paket bundlenya ya.
 
 
 buatkan tahapan tahapan yang harus direncanakan untuk implementasifitur fitur ini, jelaskan secara detail apa yang harus dilakukan pada setiap tahapan.

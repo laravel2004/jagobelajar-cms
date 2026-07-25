@@ -4,6 +4,7 @@ return [
     'irt_quiz' => [
         'base_url' => env('IRT_QUIZ_BASE_URL', 'http://127.0.0.1:8001'),
         'exam_sessions_endpoint' => env('IRT_QUIZ_EXAM_SESSIONS_ENDPOINT', 'http://127.0.0.1:8001/api/public/exam-sessions'),
+        'exam_bundles_endpoint' => env('IRT_QUIZ_EXAM_BUNDLES_ENDPOINT', 'http://127.0.0.1:8001/api/public/exam-bundles'),
         'exam_session_register_endpoint' => env('IRT_QUIZ_EXAM_SESSION_REGISTER_ENDPOINT', 'http://127.0.0.1:8001/api/public/exam-sessions'),
         'premium_register_endpoint' => env('IRT_QUIZ_PREMIUM_REGISTER_ENDPOINT', 'http://127.0.0.1:8001/api/public/exam-sessions'),
     ],

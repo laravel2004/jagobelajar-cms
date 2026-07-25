@@ -1,7 +1,7 @@
-<nav class="sticky top-0 z-30 border-b border-[#e6eaf5] bg-white/85 px-3 py-3 backdrop-blur sm:px-4 sm:py-3 lg:px-8">
+<nav class="sticky top-0 z-30 border-b border-[#e6eaf5] bg-white/85 px-3 py-3 backdrop-blur sm:px-4 sm:py-3 lg:px-8 transition-all duration-200">
     <div class="flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-            <button type="button" onclick="document.getElementById('admin-sidebar').classList.toggle('-translate-x-full'); document.getElementById('admin-sidebar-overlay').classList.toggle('hidden'); document.body.classList.toggle('overflow-hidden');" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#d9def1] bg-white text-[#0043c6] transition hover:bg-[#f6f8ff]" aria-label="Buka sidebar">
+            <button type="button" @click="sidebarOpen = !sidebarOpen" class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[#d9def1] bg-white text-[#0043c6] transition hover:bg-[#f6f8ff]" aria-label="Toggle sidebar">
                 <svg viewBox="0 0 24 24" class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16" /><path d="M4 12h16" /><path d="M4 18h16" /></svg>
             </button>
             <div>

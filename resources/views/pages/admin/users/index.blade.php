@@ -1,4 +1,4 @@
-﻿<x-layouts.admin :title="'User - '.config('app.name')">
+<x-layouts.admin :title="'User - '.config('app.name')">
     <div class="space-y-6">
         <section class="overflow-hidden rounded-[2rem] bg-white shadow-[0_18px_55px_rgba(20,27,44,0.08)] ring-1 ring-[#e6eaf5]">
             <div class="relative bg-[radial-gradient(circle_at_85%_10%,rgba(254,183,0,0.35),transparent_28%),linear-gradient(135deg,#0b2f8f,#0043c6_48%,#1e5af0)] p-6 text-white sm:p-8">
@@ -9,6 +9,30 @@
         </section>
 
         <section class="overflow-hidden rounded-[2rem] bg-white shadow-[0_18px_55px_rgba(20,27,44,0.08)] ring-1 ring-[#e6eaf5]">
+            <div class="border-b border-[#e6eaf5] bg-white p-4 sm:p-5 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h3 class="text-lg font-extrabold text-[#141b2c]">Daftar User</h3>
+                    <p class="text-sm text-[#8a93a8]">Semua pengguna terdaftar.</p>
+                </div>
+                
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <form action="{{ route('admin.users.index') }}" method="GET" class="relative flex-1 sm:min-w-[300px]">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama atau email..." class="w-full rounded-2xl border border-[#e6eaf5] bg-[#f9f9ff] py-2.5 pl-10 pr-10 text-sm text-[#141b2c] transition focus:border-[#0043c6] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0043c6]">
+                        <svg class="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#8a93a8]" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                        @if (request('search'))
+                            <a href="{{ route('admin.users.index') }}" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8a93a8] hover:text-[#141b2c]">
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </a>
+                        @endif
+                    </form>
+                    <span class="hidden sm:inline-flex rounded-full bg-[#f1f3ff] px-4 py-2 text-xs font-bold uppercase tracking-[0.16em] text-[#0043c6] whitespace-nowrap">{{ $users->total() }} User</span>
+                </div>
+            </div>
+
             <div class="divide-y divide-[#e9edff]">
                 @forelse ($users as $user)
                     <div class="flex flex-col gap-4 p-4 sm:p-6 md:flex-row md:items-center md:justify-between">
