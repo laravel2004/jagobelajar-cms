@@ -58,8 +58,10 @@ class TryoutCheckoutController extends Controller
             ],
             'callbacks' => [
                 'finish' => route('tryout.payment.success', $payment),
+                'error' => route('user.dashboard'),
+                'unfinish' => route('user.dashboard'),
             ],
-            'enabled_payments' => ['gopay', 'shopeepay', 'bank_transfer', 'cstore'],
+            'enabled_payments' => ['gopay', 'shopeepay', 'dana', 'bank_transfer', 'cstore'],
         ];
 
         $activeGateway = \App\Models\Setting::get('active_payment_gateway', 'midtrans');

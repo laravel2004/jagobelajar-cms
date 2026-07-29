@@ -138,7 +138,7 @@ class MidtransNotificationController extends Controller
                 }
             }
         } elseif (in_array($transactionStatus, ['deny', 'cancel', 'expire'], true)) {
-            $payment->update(['payment_status' => strtolower($transactionStatus)]);
+            $payment->update(['payment_status' => 'failed']);
         }
 
         return response()->json(['status' => 'ok']);

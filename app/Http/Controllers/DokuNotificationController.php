@@ -157,7 +157,7 @@ class DokuNotificationController extends Controller
                 }
             }
         } elseif (in_array(strtolower($transactionStatus), ['failed', 'expired', 'canceled'], true)) {
-            $payment->update(['payment_status' => strtolower($transactionStatus)]);
+            $payment->update(['payment_status' => 'failed']);
         }
 
         return response()->json(['status' => 'ok']);

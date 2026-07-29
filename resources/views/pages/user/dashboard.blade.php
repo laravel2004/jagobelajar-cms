@@ -99,7 +99,7 @@
                                         @elseif($payment->payment_status === 'pending')
                                             <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">Menunggu Pembayaran</span>
                                         @else
-                                            <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">Gagal</span>
+                                            <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">Failed</span>
                                         @endif
                                     </td>
                                     <td class="py-4 text-[#8a93a8]">{{ $payment->created_at->format('d M Y H:i') }}</td>
