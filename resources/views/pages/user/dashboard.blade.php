@@ -84,6 +84,7 @@
                                 <th class="pb-3 font-semibold">Total Tagihan</th>
                                 <th class="pb-3 font-semibold">Status</th>
                                 <th class="pb-3 font-semibold">Tanggal</th>
+                                <th class="pb-3 font-semibold text-right">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#e6eaf5]">
@@ -102,10 +103,17 @@
                                         @endif
                                     </td>
                                     <td class="py-4 text-[#8a93a8]">{{ $payment->created_at->format('d M Y H:i') }}</td>
+                                    <td class="py-4 text-right">
+                                        @if($payment->payment_status === 'pending')
+                                            <a href="{{ route('user.payment.pay', $payment->order_id) }}" class="inline-flex rounded-xl bg-[#0043c6] px-3 py-1.5 text-xs font-bold text-white transition hover:bg-[#0036a1]">Bayar Sekarang</a>
+                                        @else
+                                            <span class="text-xs text-[#8a93a8]">-</span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-8 text-center text-[#8a93a8]">Tidak ada data pembayaran yang ditemukan.</td>
+                                    <td colspan="6" class="py-8 text-center text-[#8a93a8]">Tidak ada data pembayaran yang ditemukan.</td>
                                 </tr>
                             @endforelse
                         </tbody>

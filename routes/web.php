@@ -43,6 +43,7 @@ Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout'])->
 Route::match(['get', 'post'], '/midtrans/notification', [MidtransNotificationController::class, 'handle'])->name('midtrans.notification');
 Route::middleware('auth')->group(function () {
     Route::get('/user/dashboard', UserDashboardController::class)->name('user.dashboard');
+    Route::get('/user/payment/{payment:order_id}/pay', [\App\Http\Controllers\UserPaymentController::class, 'pay'])->name('user.payment.pay');
     Route::post('/bimbel/{bimbel}/checkout', [BimbelCheckoutController::class, 'store'])->name('bimbel.checkout');
     Route::post('/tryout/{examSession}/checkout', [TryoutCheckoutController::class, 'store'])->name('tryout.checkout');
     Route::post('/tryout/{examSession}/free-package-register', [FreePackageRegistrationController::class, 'store'])->name('tryout.free-register');
