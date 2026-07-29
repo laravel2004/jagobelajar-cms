@@ -36,8 +36,8 @@
                         <input name="whatsapp" value="{{ old('whatsapp') }}" class="w-full rounded-2xl border border-[#d9def1] bg-[#f9f9ff] px-4 py-3 outline-none transition focus:border-[#0043c6] focus:bg-white" placeholder="08xxxxxxxxxx" required>
                     </div>
                     <div>
-                        <label class="mb-2 block text-sm font-bold text-[#141b2c]">Alamat</label>
-                        <textarea name="address" rows="3" class="w-full rounded-2xl border border-[#d9def1] bg-[#f9f9ff] px-4 py-3 outline-none transition focus:border-[#0043c6] focus:bg-white" placeholder="Alamat lengkap" required>{{ old('address') }}</textarea>
+                        <label class="mb-2 block text-sm font-bold text-[#141b2c]">Asal Sekolah</label>
+                        <input name="address" type="text" value="{{ old('address') }}" class="w-full rounded-2xl border border-[#d9def1] bg-[#f9f9ff] px-4 py-3 outline-none transition focus:border-[#0043c6] focus:bg-white" placeholder="Misal: SMAN 1 Jakarta" required>
                     </div>
                     <div>
                         <label class="mb-2 block text-sm font-bold text-[#141b2c]">Password</label>
