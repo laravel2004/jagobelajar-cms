@@ -12,14 +12,22 @@ class UserDashboardController extends Controller
     {
         $user = $request->user();
 
+        $paymentQuery = $user->payments()->latest();
+        if ($search = $request->input('search')) {
+            $paymentQuery->where(function ($q) use ($search) {
+                $q->where('order_id', 'like', "%{$search}%")
+                  ->orWhere('package_type', 'like', "%{$search}%")
+                  ->orWhere('payment_status', 'like', "%{$search}%");
+            });
+        }
+        $payments = $paymentQuery->paginate(10)->withQueryString();
+
         return view('pages.user.dashboard', [
             'user' => $user,
             'tryoutPackages' => ExamSession::query()->where('status', 'active')->orderByDesc('starts_at')->take(6)->get(),
-            'bimbelPackages' => collect([
-                ['title' => 'Bimbel Reguler', 'description' => 'Belajar rutin dengan tutor berpengalaman.', 'url' => route('bimbel.index')],
-                ['title' => 'Bimbel Intensif', 'description' => 'Pendampingan lebih fokus untuk target tertentu.', 'url' => route('bimbel.index')],
-            ]),
+            'bimbelPackages' => \App\Models\Bimbel::query()->where('status', 'active')->orderBy('sort_order')->take(6)->get(),
             'registeredPackages' => $user->packages()->latest()->get(),
+            'payments' => $payments,
         ]);
     }
 }

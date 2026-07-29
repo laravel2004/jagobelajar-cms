@@ -1,4 +1,4 @@
-﻿<x-layouts.public :title="'Dashboard User - '.config('app.name')">
+<x-layouts.public :title="'Dashboard User - '.config('app.name')">
     <section class="bg-[#f9f9ff] py-12 sm:py-16">
         <div class="jb-container space-y-8">
             @if (session('status'))
@@ -61,6 +61,64 @@
                 </div>
             </div>
 
+            <!-- Riwayat Pembayaran Section -->
+            <section class="rounded-[2rem] bg-white p-6 shadow-[0_14px_40px_rgba(20,27,44,0.08)] ring-1 ring-[#e6eaf5]">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 class="text-xl font-extrabold text-[#141b2c]">Riwayat Pembayaran</h2>
+                        <p class="text-sm text-[#8a93a8]">Daftar tagihan dan status pembayaran kamu.</p>
+                    </div>
+                    <!-- Search Form -->
+                    <form action="{{ route('user.dashboard') }}" method="GET" class="flex items-center gap-2">
+                        <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari Order ID..." class="rounded-xl border border-[#e6eaf5] bg-[#f9f9ff] px-4 py-2 text-sm text-[#141b2c] focus:border-[#0043c6] focus:outline-none focus:ring-1 focus:ring-[#0043c6]">
+                        <button type="submit" class="rounded-xl bg-[#0043c6] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#0036a1]">Cari</button>
+                    </form>
+                </div>
+
+                <div class="mt-6 overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="border-b border-[#e6eaf5] text-[#8a93a8]">
+                            <tr>
+                                <th class="pb-3 font-semibold">Order ID</th>
+                                <th class="pb-3 font-semibold">Tipe Paket</th>
+                                <th class="pb-3 font-semibold">Total Tagihan</th>
+                                <th class="pb-3 font-semibold">Status</th>
+                                <th class="pb-3 font-semibold">Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#e6eaf5]">
+                            @forelse ($payments as $payment)
+                                <tr class="transition hover:bg-[#f9f9ff]">
+                                    <td class="py-4 font-semibold text-[#141b2c]">{{ $payment->order_id }}</td>
+                                    <td class="py-4 text-[#5f667d] capitalize">{{ $payment->package_type }}</td>
+                                    <td class="py-4 font-bold text-[#141b2c]">Rp{{ number_format($payment->gross_amount, 0, ',', '.') }}</td>
+                                    <td class="py-4">
+                                        @if($payment->payment_status === 'paid' || $payment->payment_status === 'success')
+                                            <span class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">Sukses</span>
+                                        @elseif($payment->payment_status === 'pending')
+                                            <span class="inline-flex rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">Menunggu Pembayaran</span>
+                                        @else
+                                            <span class="inline-flex rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">Gagal</span>
+                                        @endif
+                                    </td>
+                                    <td class="py-4 text-[#8a93a8]">{{ $payment->created_at->format('d M Y H:i') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="py-8 text-center text-[#8a93a8]">Tidak ada data pembayaran yang ditemukan.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+                
+                @if($payments->hasPages())
+                    <div class="mt-6 border-t border-[#e6eaf5] pt-4">
+                        {{ $payments->links() }}
+                    </div>
+                @endif
+            </section>
+
             <section class="rounded-[2rem] bg-white p-6 shadow-[0_14px_40px_rgba(20,27,44,0.08)] ring-1 ring-[#e6eaf5]">
                 <div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -104,20 +162,26 @@
                     <a href="{{ route('bimbel.index') }}" class="text-sm font-bold text-[#0043c6]">Lihat semua</a>
                 </div>
                 <div class="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                    @foreach ($bimbelPackages as $package)
-                        <a href="{{ $package['url'] }}" class="overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff] transition hover:-translate-y-1">
+                    @forelse ($bimbelPackages as $package)
+                        <a href="{{ route('bimbel.detail', $package->slug) }}" class="overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff] transition hover:-translate-y-1">
                             <div class="relative aspect-[16/9] bg-[radial-gradient(circle_at_75%_25%,rgba(255,255,255,0.18),transparent_28%),linear-gradient(135deg,#7c5800,#feb700)] text-white">
-                                <div class="grid h-full w-full place-items-center">
-                                    <span class="rounded-2xl bg-white/15 px-5 py-3 text-xl font-extrabold ring-1 ring-white/25">Bimbel</span>
-                                </div>
+                                @if ($package->image_path)
+                                    <img src="{{ asset('storage/'.$package->image_path) }}" alt="{{ $package->name }}" class="h-full w-full object-cover">
+                                @else
+                                    <div class="grid h-full w-full place-items-center">
+                                        <span class="rounded-2xl bg-white/15 px-5 py-3 text-xl font-extrabold ring-1 ring-white/25">Bimbel</span>
+                                    </div>
+                                @endif
                                 <span class="absolute left-4 top-4 rounded-full bg-white/15 px-3 py-1 text-xs font-bold ring-1 ring-white/20">Paket Belajar</span>
                             </div>
                             <div class="p-5">
-                                <h3 class="text-lg font-extrabold text-[#141b2c]">{{ $package['title'] }}</h3>
-                                <p class="mt-2 line-clamp-2 text-sm leading-6 text-[#5f667d]">{{ $package['description'] }}</p>
+                                <h3 class="text-lg font-extrabold text-[#141b2c]">{{ $package->name }}</h3>
+                                <p class="mt-2 line-clamp-2 text-sm leading-6 text-[#5f667d]">{{ \Illuminate\Support\Str::limit(strip_tags($package->description), 90) }}</p>
                             </div>
                         </a>
-                    @endforeach
+                    @empty
+                        <p class="rounded-2xl bg-[#f9f9ff] p-4 text-sm text-[#8a93a8]">Belum ada paket bimbel aktif.</p>
+                    @endforelse
                 </div>
             </section>
         </div>
