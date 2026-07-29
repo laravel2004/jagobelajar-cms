@@ -30,11 +30,20 @@ class DokuService
         // Since we don't have the exact library installed, we will return a mock URL
         // or attempt the call based on standard Jokul documentation.
 
+        $callbackUrl = route('home');
+        if ($payment->package_type === 'bimbel') {
+            $callbackUrl = route('bimbel.payment.success', $payment);
+        } elseif ($payment->package_type === 'tryout') {
+            $callbackUrl = route('tryout.payment.success', $payment);
+        } elseif ($payment->package_type === 'bundle') {
+            $callbackUrl = route('bundle.payment.success', $payment);
+        }
+
         $payload = [
             'order' => [
                 'amount' => $payment->gross_amount,
                 'invoice_number' => $payment->order_id,
-                'callback_url' => route('home'), // Add proper success route here
+                'callback_url' => $callbackUrl,
             ],
             'payment' => [
                 'payment_due_date' => 60, // 60 minutes

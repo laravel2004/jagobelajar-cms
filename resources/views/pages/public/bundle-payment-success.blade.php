@@ -1,4 +1,4 @@
-<x-layouts.public :title="'Pembayaran Berhasil - ' . config('app.name')">
+<x-layouts.public :title="($isPending ? 'Menunggu Pembayaran' : 'Pembayaran Berhasil') . ' - ' . config('app.name')">
     <div class="bg-[#f9f9ff] py-12 lg:py-20 flex items-center justify-center min-h-[70vh]">
         <div class="max-w-md w-full px-4">
             <div class="bg-white rounded-3xl p-8 text-center shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff]">
