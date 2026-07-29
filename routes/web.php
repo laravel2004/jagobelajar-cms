@@ -79,3 +79,10 @@ Route::post('/admin/settings/payment', [AdminSettingController::class, 'updatePa
 
 use App\Http\Controllers\DokuNotificationController;
 Route::match(['get', 'post'], '/doku/notification', [DokuNotificationController::class, 'handle'])->name('doku.notification');
+
+Route::get('/mock-doku-payment-page', function (\Illuminate\Http\Request $request) {
+    return "<h1>Mock Doku Payment Page</h1>
+            <p>Order ID: " . htmlspecialchars($request->query('order_id')) . "</p>
+            <p>Because the real Doku keys are not set up yet, this is a mock page.</p>
+            <p>If you want to simulate a successful payment, you can manually trigger the webhook.</p>";
+});

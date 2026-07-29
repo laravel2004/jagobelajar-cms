@@ -13,7 +13,7 @@ use Illuminate\View\View;
 
 class TryoutCheckoutController extends Controller
 {
-    public function store(Request $request, ExamSession $examSession): RedirectResponse
+    public function store(Request $request, ExamSession $examSession): View|RedirectResponse
     {
         if (! $request->user()) {
             return redirect()->guest(route('login'));
@@ -95,7 +95,7 @@ class TryoutCheckoutController extends Controller
             'snap_redirect_url' => $response->json('redirect_url'),
         ]);
 
-        return redirect()->away($payment->snap_redirect_url);
+        return view('pages.public.midtrans-overlay', compact('payment'));
     }
 
     public function success(Request $request, Payment $payment): View

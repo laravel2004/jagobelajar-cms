@@ -37,7 +37,16 @@ class DokuService
                 'callback_url' => route('home'), // Add proper success route here
             ],
             'payment' => [
-                'payment_due_date' => 60 // 60 minutes
+                'payment_due_date' => 60, // 60 minutes
+                'payment_method_types' => [
+                    'VIRTUAL_ACCOUNT_BCA',
+                    'VIRTUAL_ACCOUNT_BANK_MANDIRI',
+                    'VIRTUAL_ACCOUNT_BANK_BRI',
+                    'VIRTUAL_ACCOUNT_BANK_BNI',
+                    'OVO',
+                    'SHOPEEPAY',
+                    'QRIS'
+                ]
             ],
             'customer' => [
                 'name' => $customerDetails['first_name'] ?? 'Customer',
@@ -45,23 +54,28 @@ class DokuService
             ]
         ];
 
+        $requestId = uniqid();
+        $requestTimestamp = gmdate("Y-m-d\TH:i:s\Z");
+
         try {
-            // Uncomment and implement proper signature when Doku keys are ready
-            /*
             $response = Http::withHeaders([
                 'Client-Id' => $clientId,
-                'Request-Id' => uniqid(),
-                'Request-Timestamp' => gmdate("Y-m-d\TH:i:s\Z"),
-                'Signature' => $this->generateSignature($payload, $endpoint, $secretKey)
+                'Request-Id' => $requestId,
+                'Request-Timestamp' => $requestTimestamp,
+                'Signature' => $this->generateSignature($payload, $endpoint, $secretKey, $clientId, $requestId, $requestTimestamp)
             ])->post($baseUrl . $endpoint, $payload);
 
             if ($response->successful()) {
                 return $response->json('response.payment.url');
             }
-            */
 
-            // MOCK URL FOR NOW until signature is correctly implemented by junior
-            Log::info('Doku payment link generated (MOCK)', ['order_id' => $payment->order_id]);
+            Log::error('Doku generate payment link failed', [
+                'status' => $response->status(),
+                'response' => $response->json(),
+                'order_id' => $payment->order_id
+            ]);
+            
+            // Fallback to mock if API fails (e.g. invalid keys)
             return url('/mock-doku-payment-page?order_id=' . $payment->order_id);
             
         } catch (\Throwable $th) {
@@ -70,11 +84,16 @@ class DokuService
         }
     }
 
-    private function generateSignature(array $payload, string $path, string $secretKey): string
+    private function generateSignature(array $payload, string $path, string $secretKey, string $clientId, string $requestId, string $requestTimestamp): string
     {
-        // TODO: Implement Doku Jokul Signature Logic
-        // Digest = Base64(SHA256(JSON(Payload)))
-        // Signature = HMAC-SHA256(Client-Id + Request-Id + Request-Timestamp + URI + Digest, SecretKey)
-        return 'mock-signature';
+        $digest = base64_encode(hash('sha256', json_encode($payload), true));
+        $componentSignature = "Client-Id:" . $clientId . "\n" .
+            "Request-Id:" . $requestId . "\n" .
+            "Request-Timestamp:" . $requestTimestamp . "\n" .
+            "Request-Target:" . $path . "\n" .
+            "Digest:" . $digest;
+
+        $signature = base64_encode(hash_hmac('sha256', $componentSignature, $secretKey, true));
+        return "HMACSHA256=" . $signature;
     }
 }

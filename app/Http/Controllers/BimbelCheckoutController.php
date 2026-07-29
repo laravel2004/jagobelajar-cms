@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class BimbelCheckoutController extends Controller
 {
-    public function store(Request $request, Bimbel $bimbel): RedirectResponse
+    public function store(Request $request, Bimbel $bimbel): View|RedirectResponse
     {
         if (! $request->user()) {
             return redirect()->guest(route('login'));
@@ -92,7 +92,7 @@ class BimbelCheckoutController extends Controller
             'snap_redirect_url' => $response->json('redirect_url'),
         ]);
 
-        return redirect()->away($payment->snap_redirect_url);
+        return view('pages.public.midtrans-overlay', compact('payment'));
     }
 
     public function success(Request $request, Payment $payment): View|RedirectResponse

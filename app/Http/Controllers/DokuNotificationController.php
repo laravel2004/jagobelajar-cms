@@ -35,9 +35,36 @@ class DokuNotificationController extends Controller
             return response()->json(['status' => 'ok']);
         }
 
-        // TODO: Validate Signature from Headers using Doku Client Secret Key
-        // Example: $signature = $request->header('Signature');
+        $secretKey = config('services.doku.secret_key');
+        $signatureHeader = $request->header('Signature');
         
+        if ($signatureHeader && $secretKey) {
+            $clientId = $request->header('Client-Id');
+            $requestId = $request->header('Request-Id');
+            $requestTimestamp = $request->header('Request-Timestamp');
+            $path = $request->getPathInfo(); // e.g. /doku/notification
+
+            $payload = $request->getContent();
+            $digest = base64_encode(hash('sha256', $payload, true));
+
+            $componentSignature = "Client-Id:" . $clientId . "\n" .
+                "Request-Id:" . $requestId . "\n" .
+                "Request-Timestamp:" . $requestTimestamp . "\n" .
+                "Request-Target:" . $path . "\n" .
+                "Digest:" . $digest;
+
+            $expectedSignature = "HMACSHA256=" . base64_encode(hash_hmac('sha256', $componentSignature, $secretKey, true));
+
+            if (!hash_equals($expectedSignature, $signatureHeader)) {
+                Log::warning('Doku notification invalid signature', [
+                    'expected' => $expectedSignature,
+                    'received' => $signatureHeader,
+                    'order_id' => $orderId
+                ]);
+                return response()->json(['status' => 'forbidden'], 403);
+            }
+        }
+
         if (in_array(strtolower($transactionStatus), ['success', 'paid'], true)) {
             $payment->update([
                 'payment_status' => 'paid',

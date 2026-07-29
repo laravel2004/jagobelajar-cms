@@ -16,14 +16,13 @@ use Illuminate\Support\Facades\Log;
 
 class BundleCheckoutController extends Controller
 {
-    public function store(Request $request, string $slug): RedirectResponse
+    public function store(Request $request, string $slug): View|RedirectResponse
     {
         if (! $request->user()) {
             return redirect()->guest(route('login'));
         }
 
         $bundle = ExamBundle::where('slug', $slug)->firstOrFail();
-
         if ($bundle->status !== 'active') {
             return back()->withErrors(['payment' => 'Paket bundle tidak tersedia.']);
         }
@@ -102,7 +101,7 @@ class BundleCheckoutController extends Controller
             'snap_redirect_url' => $response->json('redirect_url'),
         ]);
 
-        return redirect()->away($payment->snap_redirect_url);
+        return view('pages.public.midtrans-overlay', compact('payment'));
     }
 
     public function success(Request $request, Payment $payment): View
