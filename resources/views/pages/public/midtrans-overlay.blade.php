@@ -43,6 +43,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             function triggerSnap() {
                 window.snap.pay('{{ $payment->snap_token }}', {
+                    uiMode: 'qr',
                     onSuccess: function(result){
                         window.location.href = "{{ $successRoute }}";
                     },
