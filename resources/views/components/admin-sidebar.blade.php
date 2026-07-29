@@ -30,6 +30,7 @@
             <a class="{{ request()->routeIs('admin.bimbel.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.bimbel.index') }}">Bimbel</a>
             <a class="{{ request()->routeIs('admin.exam-sessions.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.exam-sessions.index') }}">Sesi Ujian</a>
             <a class="{{ request()->routeIs('admin.exam-bundles.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.exam-bundles.index') }}">Paket Bundle</a>
+            <a class="{{ request()->routeIs('admin.settings.payment') ? $activeLink : $inactiveLink }}" href="{{ route('admin.settings.payment') }}">Payment Gateway</a>
         </nav>
 
         <div class="mt-auto border-t border-[#e6eaf5] p-4">

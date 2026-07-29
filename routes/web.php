@@ -72,3 +72,10 @@ Route::get('/admin/paket-bundle/create', [AdminExamBundleController::class, 'cre
 Route::post('/admin/paket-bundle', [AdminExamBundleController::class, 'store'])->name('admin.exam-bundles.store');
 Route::get('/admin/paket-bundle/{examBundle}/edit', [AdminExamBundleController::class, 'edit'])->name('admin.exam-bundles.edit');
 Route::put('/admin/paket-bundle/{examBundle}', [AdminExamBundleController::class, 'update'])->name('admin.exam-bundles.update');
+
+use App\Http\Controllers\AdminSettingController;
+Route::get('/admin/settings/payment', [AdminSettingController::class, 'editPayment'])->name('admin.settings.payment');
+Route::post('/admin/settings/payment', [AdminSettingController::class, 'updatePayment'])->name('admin.settings.payment.update');
+
+use App\Http\Controllers\DokuNotificationController;
+Route::match(['get', 'post'], '/doku/notification', [DokuNotificationController::class, 'handle'])->name('doku.notification');

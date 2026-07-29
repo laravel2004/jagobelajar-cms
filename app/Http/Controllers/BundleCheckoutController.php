@@ -68,6 +68,25 @@ class BundleCheckoutController extends Controller
             'enabled_payments' => ['gopay', 'shopeepay', 'bank_transfer', 'cstore'],
         ];
 
+        $activeGateway = \App\Models\Setting::get('active_payment_gateway', 'midtrans');
+
+        if ($activeGateway === 'doku') {
+            $dokuService = new \App\Services\DokuService();
+            $dokuPaymentUrl = $dokuService->generatePaymentLink($payment, $payload['customer_details'], $payload['item_details']);
+
+            if (! $dokuPaymentUrl) {
+                $payment->delete();
+                return back()->withErrors(['payment' => 'Gagal membuat transaksi Doku.']);
+            }
+
+            $payment->update([
+                'snap_redirect_url' => $dokuPaymentUrl, // Reuse column for simplicity
+            ]);
+
+            return redirect()->away($dokuPaymentUrl);
+        }
+
+        // Midtrans Fallback/Default
         $baseUrl = config('services.midtrans.is_production') ? 'https://app.midtrans.com' : 'https://app.sandbox.midtrans.com';
         $response = Http::withBasicAuth(config('services.midtrans.server_key'), '')
             ->acceptJson()
