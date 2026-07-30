@@ -66,6 +66,9 @@ class BundleCheckoutController extends Controller
                 'error' => route('user.dashboard'),
                 'unfinish' => route('user.dashboard'),
             ],
+            'shopeepay' => [
+                'callback_url' => route('bundle.payment.success', $payment),
+            ],
             'enabled_payments' => ['gopay', 'shopeepay', 'dana', 'qris', 'bank_transfer', 'cstore'],
         ];
 
