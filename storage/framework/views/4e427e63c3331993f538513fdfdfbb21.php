@@ -30,6 +30,7 @@
             <a class="<?php echo e(request()->routeIs('admin.bimbel.*') ? $activeLink : $inactiveLink); ?>" href="<?php echo e(route('admin.bimbel.index')); ?>">Bimbel</a>
             <a class="<?php echo e(request()->routeIs('admin.exam-sessions.*') ? $activeLink : $inactiveLink); ?>" href="<?php echo e(route('admin.exam-sessions.index')); ?>">Sesi Ujian</a>
             <a class="<?php echo e(request()->routeIs('admin.exam-bundles.*') ? $activeLink : $inactiveLink); ?>" href="<?php echo e(route('admin.exam-bundles.index')); ?>">Paket Bundle</a>
+            <a class="<?php echo e(request()->routeIs('admin.settings.payment') ? $activeLink : $inactiveLink); ?>" href="<?php echo e(route('admin.settings.payment')); ?>">Payment Gateway</a>
         </nav>
 
         <div class="mt-auto border-t border-[#e6eaf5] p-4">

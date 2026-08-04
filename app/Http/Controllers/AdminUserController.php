@@ -32,4 +32,11 @@ class AdminUserController extends Controller
             'user' => $user->load(['packages' => fn ($query) => $query->latest()]),
         ]);
     }
+
+    public function destroy(User $user)
+    {
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil dihapus.');
+    }
 }
