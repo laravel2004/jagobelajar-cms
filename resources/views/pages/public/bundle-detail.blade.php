@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="mt-8 space-y-3">
-                            @if ($bundle->is_free_package_active)
+                            @if ($bundle->is_free_package_active && (!$bundle->free_package_end_date || $bundle->free_package_end_date->isFuture()))
                                 <button type="button" @click="openFree = true" class="w-full flex justify-center items-center gap-2 rounded-2xl bg-emerald-500 px-5 py-4 text-sm font-extrabold text-white shadow-[0_14px_24px_rgba(16,185,129,0.22)] transition hover:-translate-y-0.5 hover:bg-emerald-600">
                                     Daftar Paket Gratis
                                 </button>

@@ -11,7 +11,7 @@ class ExamBundle extends Model
 
     protected $fillable = [
         'external_id', 'name', 'slug', 'title', 'description', 'image_path',
-        'price', 'sale_price', 'is_promo_active', 'is_free_package_active', 'status', 'sort_order',
+        'price', 'sale_price', 'is_promo_active', 'is_free_package_active', 'free_package_start_date', 'free_package_end_date', 'status', 'sort_order',
         'source_updated_at', 'last_fetched_at', 'published_at',
     ];
 
@@ -22,6 +22,8 @@ class ExamBundle extends Model
             'sale_price' => 'integer',
             'is_promo_active' => 'boolean',
             'is_free_package_active' => 'boolean',
+            'free_package_start_date' => 'datetime',
+            'free_package_end_date' => 'datetime',
             'sort_order' => 'integer',
             'source_updated_at' => 'datetime',
             'last_fetched_at' => 'datetime',

@@ -1,75 +1,84 @@
-# Issue: Implementasi Doku Payment Gateway & Sistem Switcher (Settings)
+# Perencanaan Fitur: Batas Waktu Paket Gratis (Paket Bundle)
 
-## Deskripsi
-Saat ini sistem pembayaran utama menggunakan Midtrans. Kita membutuhkan integrasi payment gateway alternatif menggunakan **Doku**. Tujuannya adalah sebagai *fallback* (cadangan); apabila Midtrans sedang mengalami gangguan, admin dapat dengan mudah mengubah payment gateway yang aktif ke Doku melalui UI admin tanpa perlu melakukan perubahan kode.
+## Deskripsi Singkat
+Fitur ini bertujuan untuk menambahkan batas waktu (start date dan end date) pada pengaktifan paket gratis di dalam entitas Paket Bundle. Nantinya, tombol "Daftar Paket Gratis" di halaman depan (user) hanya akan muncul jika masa berlaku paket gratis masih aktif (belum melewati `end_date`).
+
+## Target Halaman
+1. **Admin (Create/Edit)**: `http://localhost:8000/admin/paket-bundle/create` dan `http://localhost:8000/admin/paket-bundle/{id}/edit`
+2. **User (Detail Bundle)**: `http://localhost:8000/tryout/bundle/{slug}`
+
+---
 
 ## Tahapan Implementasi
 
-Mohon ikuti tahapan-tahapan di bawah ini secara berurutan untuk mengimplementasikan fitur tersebut.
-
-### Tahap 1: Persiapan Database & Model untuk Settings (Sistem Switcher)
-Kita membutuhkan tempat untuk menyimpan pengaturan payment gateway yang aktif agar bisa diubah melalui UI.
-1. **Buat Migration Tabel Settings:**
-   - Jalankan perintah `php artisan make:migration create_settings_table`.
-   - Buat skema tabel dengan kolom: `id`, `key` (string, unique), `value` (text/string, nullable), dan `timestamps`.
-2. **Buat Model Setting:**
-   - Jalankan `php artisan make:model Setting`.
-   - Tambahkan property `$fillable = ['key', 'value'];`.
-   - (Opsional) Buat helper method di dalam model (contoh: `public static function get($key, $default = null)`) untuk memudahkan pemanggilan setting.
-3. **Buat Seeder:**
-   - Buat `SettingSeeder` yang akan mengisi data awal: `key` = `active_payment_gateway`, `value` = `midtrans`.
-   - Jalankan seeder ini agar database default langsung mengarah ke midtrans.
-
-### Tahap 2: Konfigurasi Environment & Services Doku
-1. **Update `.env` dan `.env.example`:**
-   - Tambahkan variabel kredensial Doku (misal Doku Jokul):
-     ```env
-     DOKU_CLIENT_ID=
-     DOKU_SECRET_KEY=
-     DOKU_IS_PRODUCTION=false
+### Tahap 1: Persiapan Database (Migration & Model)
+1. **Pengecekan Schema Database**:
+   - Cek tabel yang menyimpan data Paket Bundle (misalnya `paket_bundles`).
+   - Periksa apakah kolom untuk menyimpan tanggal mulai dan berakhirnya paket gratis sudah tersedia (misal: `free_start_date` dan `free_end_date`, atau `start_date` dan `end_date`).
+2. **Pembuatan Migration (Jika Belum Ada)**:
+   - Buat file migration baru untuk menambahkan kolom `start_date` dan `end_date` (tipe data `timestamp` atau `datetime`, nullable).
+   - Jalankan `php artisan migrate`.
+3. **Pembaruan Model**:
+   - Buka file Model terkait (misalnya `app/Models/PaketBundle.php`).
+   - Tambahkan kolom baru tersebut ke dalam properti `$fillable`.
+   - Tambahkan casting (opsional tapi direkomendasikan):
+     ```php
+     protected $casts = [
+         'start_date' => 'datetime',
+         'end_date' => 'datetime',
+     ];
      ```
-2. **Update `config/services.php`:**
-   - Tambahkan block konfigurasi `doku` yang memetakan *environment variable* di atas, sehingga strukturnya mirip dengan blok `midtrans` yang sudah ada.
+   - (Opsional) Buat *accessor* atau method pembantu, misalnya `isFreePackageValid()`, yang mengembalikan nilai boolean (true jika tanggal sekarang <= `end_date`).
 
-### Tahap 3: Membuat Modul UI Admin untuk Settings
-1. **Routes:**
-   - Tambahkan route baru di `routes/web.php` dalam grup middleware admin, contoh: `Route::get('/admin/settings/payment', [AdminSettingController::class, 'edit'])` dan `Route::post('/admin/settings/payment', [AdminSettingController::class, 'update'])`.
-2. **Controller:**
-   - Buat `AdminSettingController.php`.
-   - Method `edit`: Mengambil nilai saat ini dari tabel `settings` (key `active_payment_gateway`) dan mengembalikannya ke view.
-   - Method `update`: Melakukan validasi input, lalu memperbarui atau membuat record `active_payment_gateway` dengan value baru (`midtrans` atau `doku`).
-3. **View & Sidebar Admin:**
-   - Buat file Blade baru untuk form (contoh form dengan Radio Button atau Dropdown untuk memilih antara Midtrans dan Doku).
-   - Tambahkan tautan "Payment Settings" di sidebar layout admin agar mudah diakses.
+### Tahap 2: Backend (Controller & Validation)
+1. **Pembaruan Form Request / Validasi**:
+   - Buka FormRequest atau method controller yang menangani proses simpan (store) dan ubah (update) Paket Bundle.
+   - Tambahkan aturan validasi:
+     - `start_date`: nullable, date.
+     - `end_date`: nullable, date, after_or_equal:start_date.
+   - Pastikan validasi ini hanya *required* atau dipertimbangkan jika opsi "Aktifkan paket gratisnya" bernilai `true`.
+2. **Pembaruan Controller**:
+   - Pastikan data `start_date` dan `end_date` ikut disimpan/diperbarui ke database saat proses simpan. 
+   - *Best practice*: Jika fitur paket gratis dimatikan (`false`), pertimbangkan untuk men-set (null) kedua kolom tanggal tersebut agar data tetap bersih.
 
-### Tahap 4: Implementasi Inti Integrasi API Doku
-1. **Buat Service Khusus Doku:**
-   - (Opsional tapi disarankan) Buat kelas service, misalnya `app/Services/DokuService.php` untuk menangani *request* *generate payment link* ke API Doku (mirip Midtrans Snap).
-2. **Buat Controller Notification Doku:**
-   - Jalankan `php artisan make:controller DokuNotificationController`.
-   - Di dalam controller ini, buat logika untuk menerima *callback/webhook* dari Doku ketika transaksi sukses dibayar.
-   - Logikanya harus mirip dengan `MidtransNotificationController`: memvalidasi *signature* dari Doku, mencari data di tabel `payments` berdasarkan `order_id`, lalu mengubah status `payment_status` menjadi `paid`.
-3. **Routes Webhook:**
-   - Daftarkan route webhook Doku (misal: `/api/payment/doku-notification`).
-   - **Penting:** Kecualikan route ini dari proteksi CSRF di dalam file `bootstrap/app.php` (tambahkan di bagian `->withMiddleware(function (Middleware $middleware) { $middleware->validateCsrfTokens(except: [...]); })`), sama seperti saat Midtrans dikonfigurasi.
+### Tahap 3: Frontend Admin (Form Create & Edit)
+*Asumsi framework yang digunakan (misal: React/Inertia.js atau Blade).*
+1. **Lokasi File**: Buka komponen form untuk Create dan Edit Paket Bundle.
+2. **Implementasi UI & Logika render kondisi**:
+   - Cari input toggle/checkbox untuk "Aktifkan paket gratisnya".
+   - Buat *conditional rendering*: Jika nilai "Aktifkan paket gratisnya" adalah `true` (aktif), maka tampilkan dua input tambahan:
+     - Input tipe date/datetime untuk `start_date`.
+     - Input tipe date/datetime untuk `end_date`.
+   - Jika "Aktifkan paket gratisnya" dimatikan (`false`), sembunyikan input tersebut.
+   - Hubungkan (bind) state input tersebut ke form data agar bisa disubmit.
+3. **Penanganan Error**: Pastikan error feedback validasi dari backend untuk field `start_date` dan `end_date` ditampilkan dengan benar di bawah input terkait.
 
-### Tahap 5: Modifikasi Flow Checkout (Routing Pembayaran)
-Saat ini checkout langsung memanggil Midtrans. Kita harus membuatnya dinamis.
-1. Buka semua file controller yang menangani checkout (misalnya: `BundleCheckoutController`, `BimbelCheckoutController`, `TryoutCheckoutController`).
-2. Di bagian method `store()` atau saat generate payment, ambil nilai gateway aktif:
-   ```php
-   $activeGateway = \App\Models\Setting::where('key', 'active_payment_gateway')->first()->value ?? 'midtrans';
-   ```
-3. Buat percabangan logika (*if-else*):
-   - Jika `midtrans`: Eksekusi kode Guzzle/Http *post* ke Midtrans Snap seperti biasa, lalu *redirect* ke `snap_redirect_url`.
-   - Jika `doku`: Eksekusi logika *generate payment link* Doku (memanggil API Doku), simpan token/URL, lalu *redirect* user ke halaman pembayaran Doku.
+### Tahap 4: Frontend User (Halaman Detail Bundle)
+1. **Lokasi File**: Buka komponen/view untuk halaman detail bundle (contoh rute: `/tryout/bundle/{slug}`).
+2. **Pembaruan Logika Tombol Daftar**:
+   - Cari elemen UI untuk tombol "Daftar Paket Gratis".
+   - Tambahkan logika kondisi untuk memanipulasi visibilitas tombol tersebut.
+   - Contoh logika dasar:
+     ```javascript
+     const currentDate = new Date();
+     const endDate = bundle.end_date ? new Date(bundle.end_date) : null;
+     
+     // Asumsi is_free_enabled merepresentasikan status aktif paket gratis
+     const isFreePackageEnabled = bundle.is_free_enabled; 
 
-### Tahap 6: Testing (Quality Assurance)
-Sebelum merilis ke production, pastikan melakukan pengujian berikut di environment lokal/staging (menggunakan mode Sandbox):
-1. Uji **Midtrans**: Ubah setting ke Midtrans di admin. Lakukan checkout, pastikan user diarahkan ke Midtrans, bayar simulasi, dan pastikan callback `MidtransNotificationController` berhasil memproses `paid`.
-2. Uji **Doku**: Ubah setting ke Doku di admin. Lakukan checkout, pastikan user diarahkan ke payment link Doku, lakukan bayar simulasi di portal Doku Sandbox, dan pastikan callback `DokuNotificationController` memproses status dengan benar.
-3. Uji **UI Admin**: Coba ganti-ganti pengaturan bolak-balik untuk memastikan sistem switcher menyimpan setting dengan tepat di database.
+     // Tampilkan tombol jika paket gratis dicentang/aktif DAN (end_date tidak ada ATAU waktu sekarang masih <= end_date)
+     const showFreeButton = isFreePackageEnabled && (!endDate || currentDate <= endDate);
 
----
-**Catatan untuk Junior Programmer / AI:**
-Fokus pada clean code dan gunakan metode abstraksi yang baik pada Tahap 5 agar kode tidak berulang (contoh: gunakan *Service class* atau *interface* untuk memanggil gateway). Jangan merubah proses bisnis checkout (harga promo, dll), cukup modifikasi ke mana data API dikirimkan.
+     if (showFreeButton) {
+         // Render Tombol "Daftar Paket Gratis"
+     }
+     ```
+   - **Catatan Keamanan Backend**: Pastikan backend juga memvalidasi waktu saat endpoint pendaftaran (klaim) gratis di-hit. Jangan bergantung hanya pada UI (Frontend) untuk menyembunyikan tombol.
+
+### Tahap 5: Testing (Uji Coba Cepat)
+1. **Skenario Admin**:
+   - Aktifkan paket gratis, set start_date dan end_date, lalu simpan.
+   - Coba matikan paket gratis, simpan, pastikan berjalan lancar.
+2. **Skenario Frontend User**:
+   - Buka detail bundle yang memiliki `end_date` masa lampau (kemarin), pastikan tombol "Daftar Paket Gratis" **tidak muncul**.
+   - Buka detail bundle yang memiliki `end_date` masa depan (besok/lusa), pastikan tombol **muncul**.

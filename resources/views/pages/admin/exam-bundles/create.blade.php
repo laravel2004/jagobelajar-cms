@@ -121,10 +121,25 @@
                         <span class="text-sm font-medium text-gray-700">Aktifkan Harga Promo</span>
                     </label>
 
-                    <label class="flex items-center gap-2 cursor-pointer mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
-                        <input type="checkbox" name="is_free_package_active" value="1" {{ old('is_free_package_active') ? 'checked' : '' }} class="w-4 h-4 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500">
-                        <span class="text-sm font-medium text-emerald-700">Aktifkan Paket Gratis</span>
-                    </label>
+                    <div x-data="{ isFreePackageActive: {{ old('is_free_package_active') ? 'true' : 'false' }} }">
+                        <label class="flex items-center gap-2 cursor-pointer mt-4 p-3 bg-emerald-50 border border-emerald-200 rounded-lg">
+                            <input type="checkbox" name="is_free_package_active" value="1" x-model="isFreePackageActive" class="w-4 h-4 text-emerald-600 rounded border-emerald-300 focus:ring-emerald-500">
+                            <span class="text-sm font-medium text-emerald-700">Aktifkan Paket Gratis</span>
+                        </label>
+
+                        <div x-show="isFreePackageActive" x-transition class="mt-3 p-4 bg-white border border-emerald-100 rounded-lg shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Tanggal Mulai Gratis</label>
+                                <input type="datetime-local" name="free_package_start_date" value="{{ old('free_package_start_date') }}" class="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                @error('free_package_start_date') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                            </div>
+                            <div>
+                                <label class="mb-1 block text-sm font-medium text-gray-700">Tanggal Berakhir Gratis</label>
+                                <input type="datetime-local" name="free_package_end_date" value="{{ old('free_package_end_date') }}" class="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500">
+                                @error('free_package_end_date') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
+                            </div>
+                        </div>
+                    </div>
 
                     <div>
                         <label class="mb-1 block text-sm font-medium text-gray-700">Harga Promo (Rp)</label>
