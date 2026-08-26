@@ -10,7 +10,7 @@ class ExamBundle extends Model
     use HasFactory;
 
     protected $fillable = [
-        'external_id', 'name', 'jenjang', 'slug', 'title', 'description', 'image_path',
+        'external_id', 'name', 'jenjang_id', 'slug', 'title', 'description', 'image_path',
         'price', 'sale_price', 'is_promo_active', 'is_free_package_active', 'free_package_start_date', 'free_package_end_date', 'status', 'sort_order',
         'source_updated_at', 'last_fetched_at', 'published_at',
     ];

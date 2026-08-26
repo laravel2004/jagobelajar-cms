@@ -42,7 +42,8 @@ class AdminExamBundleController extends Controller
     public function create(): View
     {
         $allSessions = ExamSession::orderBy('name')->get();
-        return view('pages.admin.exam-bundles.create', compact('allSessions'));
+        $jenjangs = \App\Models\Jenjang::orderBy('id')->get();
+        return view('pages.admin.exam-bundles.create', compact('allSessions', 'jenjangs'));
     }
 
     public function store(Request $request): RedirectResponse
@@ -60,7 +61,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => ['nullable', 'date', 'after_or_equal:free_package_start_date'],
             'status' => ['required', 'in:draft,active,inactive'],
             'sort_order' => ['required', 'integer', 'min:0'],
-            'jenjang' => ['nullable', 'string', 'in:SD,SMP,SMA,TKA,OSN,Umum'],
+            'jenjang_id' => ['nullable', 'exists:jenjangs,id'],
             'image' => ['nullable', 'image', 'max:4096'],
             'session_ids' => ['nullable', 'array'],
             'session_ids.*' => ['exists:exam_sessions,id'],
@@ -88,7 +89,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => $request->boolean('is_free_package_active') ? ($validated['free_package_end_date'] ?? null) : null,
             'status' => $validated['status'],
             'sort_order' => $validated['sort_order'],
-            'jenjang' => $validated['jenjang'] ?? null,
+            'jenjang_id' => $validated['jenjang_id'] ?? null,
             'image_path' => $imagePath,
             'published_at' => $validated['status'] === 'active' ? now() : null,
         ]);
@@ -101,7 +102,8 @@ class AdminExamBundleController extends Controller
     public function edit(ExamBundle $examBundle): View
     {
         $allSessions = ExamSession::orderBy('name')->get();
-        return view('pages.admin.exam-bundles.edit', compact('examBundle', 'allSessions'));
+        $jenjangs = \App\Models\Jenjang::orderBy('id')->get();
+        return view('pages.admin.exam-bundles.edit', compact('examBundle', 'allSessions', 'jenjangs'));
     }
 
     public function update(Request $request, ExamBundle $examBundle): RedirectResponse
@@ -119,7 +121,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => ['nullable', 'date', 'after_or_equal:free_package_start_date'],
             'status' => ['required', 'in:draft,active,inactive'],
             'sort_order' => ['required', 'integer', 'min:0'],
-            'jenjang' => ['nullable', 'string', 'in:SD,SMP,SMA,TKA,OSN,Umum'],
+            'jenjang_id' => ['nullable', 'exists:jenjangs,id'],
             'image' => ['nullable', 'image', 'max:4096'],
             'session_ids' => ['nullable', 'array'],
             'session_ids.*' => ['exists:exam_sessions,id'],
@@ -147,7 +149,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => $request->boolean('is_free_package_active') ? ($validated['free_package_end_date'] ?? null) : null,
             'status' => $validated['status'],
             'sort_order' => $validated['sort_order'],
-            'jenjang' => $validated['jenjang'] ?? null,
+            'jenjang_id' => $validated['jenjang_id'] ?? null,
             'image_path' => $imagePath,
             'published_at' => $validated['status'] === 'active' ? now() : null,
         ]);

@@ -149,21 +149,21 @@ class PublicPageController extends Controller
 
     public function tryout(\Illuminate\Http\Request $request): View
     {
-        $sessionJenjang = ExamSession::where('status', 'active')
-            ->whereNotNull('jenjang')
-            ->pluck('jenjang');
-        $bundleJenjang = \App\Models\ExamBundle::where('status', 'active')
-            ->whereNotNull('jenjang')
-            ->pluck('jenjang');
-        $jenjangList = $sessionJenjang->merge($bundleJenjang)->unique()->sort()->values();
+        $jenjangList = \App\Models\Jenjang::whereHas('examSessions', function ($q) {
+            $q->where('status', 'active');
+        })->orWhereHas('examBundles', function ($q) {
+            $q->where('status', 'active');
+        })->orderBy('id')->pluck('name');
 
         return view('pages.public.tryout', [
             'examSessions' => ExamSession::query()
+                ->with('jenjang')
                 ->where('status', 'active')
                 ->orderBy('sort_order')
                 ->orderBy('starts_at')
                 ->get(),
             'examBundles' => \App\Models\ExamBundle::query()
+                ->with('jenjang')
                 ->where('status', 'active')
                 ->orderBy('sort_order')
                 ->latest()

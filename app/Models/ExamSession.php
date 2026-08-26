@@ -10,7 +10,7 @@ class ExamSession extends Model
     use HasFactory;
 
     protected $fillable = [
-        'external_id','source_code','source_slug','name','jenjang','subject','starts_at','ends_at','source_updated_at','last_fetched_at',
+        'external_id','source_code','source_slug','name','jenjang_id','subject','starts_at','ends_at','source_updated_at','last_fetched_at',
         'slug','title','description','image_path','price','sale_price','is_promo_active','is_free_package_active',
         'status','published_at','sort_order',
     ];
@@ -22,6 +22,11 @@ class ExamSession extends Model
             'published_at' => 'datetime','price' => 'integer','sale_price' => 'integer','sort_order' => 'integer',
             'is_promo_active' => 'boolean','is_free_package_active' => 'boolean',
         ];
+    }
+
+    public function jenjang(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Jenjang::class);
     }
 
     public function bundles()

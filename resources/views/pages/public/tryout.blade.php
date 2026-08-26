@@ -36,7 +36,7 @@
                         @php($displayPrice = $hasPromo ? $bundle->sale_price : $bundle->price)
                         <article class="tryout-item overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff] border-2 border-[#feb700]/50 relative"
                                  data-title="{{ strtolower($bundle->title ?? $bundle->name) }}"
-                                 data-jenjang="{{ $bundle->jenjang }}">
+                                 data-jenjang="{{ $bundle->jenjang?->name }}">
                             <div class="absolute top-0 right-0 bg-[#feb700] text-[#271900] text-xs font-bold px-4 py-1.5 rounded-bl-xl z-10 uppercase tracking-widest">HEMAT</div>
                             <div class="relative grid aspect-[16/9] place-items-center overflow-hidden bg-gradient-to-br from-[#0043c6] to-[#4a36c4] text-white">
                                 @if ($bundle->image_path)
@@ -85,7 +85,7 @@
                         @php($displayPrice = $hasPromo ? $examSession->sale_price : $examSession->price)
                         <article class="tryout-item overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff]"
                                  data-title="{{ strtolower($examSession->title ?? $examSession->name) }}"
-                                 data-jenjang="{{ $examSession->jenjang }}">
+                                 data-jenjang="{{ $examSession->jenjang?->name }}">
                             <div class="relative grid aspect-[16/9] place-items-center overflow-hidden bg-[radial-gradient(circle_at_75%_25%,rgba(254,183,0,0.55),transparent_30%),linear-gradient(135deg,#0043c6,#1e5af0)] text-white">
                                 @if ($examSession->image_path)
                                     <img src="{{ asset('storage/'.$examSession->image_path) }}" alt="{{ $examSession->title ?? $examSession->name }}" class="h-full w-full object-cover">

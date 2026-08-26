@@ -41,10 +41,10 @@
 
                     <div class="md:col-span-2">
                         <label class="mb-1 block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
-                        <select name="jenjang" class="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <select name="jenjang_id" class="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
                             <option value="">-- Pilih Jenjang --</option>
-                            @foreach (['SD', 'SMP', 'SMA', 'TKA', 'OSN', 'Umum'] as $j)
-                                <option value="{{ $j }}" {{ old('jenjang', $examBundle->jenjang) === $j ? 'selected' : '' }}>{{ $j }}</option>
+                            @foreach ($jenjangs as $j)
+                                <option value="{{ $j->id }}" {{ old('jenjang_id', $examBundle->jenjang_id) == $j->id ? 'selected' : '' }}>{{ $j->name }}</option>
                             @endforeach
                         </select>
                         <p class="text-xs text-gray-500 mt-1">Pilih jenjang pendidikan untuk memudahkan filter.</p>
