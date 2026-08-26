@@ -36,8 +36,18 @@
                 <section class="overflow-hidden rounded-[2rem] bg-white shadow-[0_18px_55px_rgba(20,27,44,0.08)] ring-1 ring-[#e6eaf5]">
                     <div class="relative bg-[radial-gradient(circle_at_85%_10%,rgba(254,183,0,0.35),transparent_28%),linear-gradient(135deg,#0b2f8f,#0043c6_48%,#1e5af0)] p-6 text-white sm:p-8">
                         <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] ring-1 ring-white/20">CMS Module</span>
-                        <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Master Jenjang</h1>
-                        <p class="mt-3 text-sm leading-7 text-white/80">Kelola jenjang pendidikan untuk paket dan sesi ujian.</p>
+                        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mt-4">
+                            <div>
+                                <h1 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Master Jenjang</h1>
+                                <p class="mt-3 text-sm leading-7 text-white/80">Kelola jenjang pendidikan untuk paket dan sesi ujian.</p>
+                            </div>
+                            <form method="GET" action="{{ route('admin.jenjangs.index') }}" class="relative w-full sm:w-64">
+                                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari jenjang..." class="w-full rounded-xl bg-white/10 px-4 py-2.5 pl-10 text-sm text-white placeholder-white/60 ring-1 ring-white/20 focus:outline-none focus:ring-2 focus:ring-white/40 backdrop-blur-md">
+                                <svg class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                </svg>
+                            </form>
+                        </div>
                     </div>
 
                     <div class="divide-y divide-[#e9edff]">
@@ -71,6 +81,11 @@
                             <div class="p-6 text-sm text-[#5f667d]">Belum ada jenjang.</div>
                         @endforelse
                     </div>
+                    @if ($jenjangs->hasPages())
+                        <div class="border-t border-[#e9edff] p-4 sm:p-6 bg-gray-50/50">
+                            {{ $jenjangs->links() }}
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>

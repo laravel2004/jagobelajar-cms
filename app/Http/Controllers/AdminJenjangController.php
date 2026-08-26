@@ -10,9 +10,16 @@ use Illuminate\Support\Str;
 
 class AdminJenjangController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $jenjangs = Jenjang::orderBy('id')->get();
+        $query = Jenjang::query();
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                  ->orWhere('slug', 'like', '%' . $request->search . '%');
+        }
+
+        $jenjangs = $query->orderBy('id')->paginate(10)->withQueryString();
         return view('pages.admin.jenjangs.index', compact('jenjangs'));
     }
 
