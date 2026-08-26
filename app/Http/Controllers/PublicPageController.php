@@ -147,8 +147,16 @@ class PublicPageController extends Controller
         ]);
     }
 
-    public function tryout(): View
+    public function tryout(\Illuminate\Http\Request $request): View
     {
+        $sessionJenjang = ExamSession::where('status', 'active')
+            ->whereNotNull('jenjang')
+            ->pluck('jenjang');
+        $bundleJenjang = \App\Models\ExamBundle::where('status', 'active')
+            ->whereNotNull('jenjang')
+            ->pluck('jenjang');
+        $jenjangList = $sessionJenjang->merge($bundleJenjang)->unique()->sort()->values();
+
         return view('pages.public.tryout', [
             'examSessions' => ExamSession::query()
                 ->where('status', 'active')
@@ -160,6 +168,7 @@ class PublicPageController extends Controller
                 ->orderBy('sort_order')
                 ->latest()
                 ->get(),
+            'jenjangList' => $jenjangList,
         ]);
     }
 

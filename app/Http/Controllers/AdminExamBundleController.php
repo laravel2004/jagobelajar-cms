@@ -60,6 +60,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => ['nullable', 'date', 'after_or_equal:free_package_start_date'],
             'status' => ['required', 'in:draft,active,inactive'],
             'sort_order' => ['required', 'integer', 'min:0'],
+            'jenjang' => ['nullable', 'string', 'in:SD,SMP,SMA,TKA,OSN,Umum'],
             'image' => ['nullable', 'image', 'max:4096'],
             'session_ids' => ['nullable', 'array'],
             'session_ids.*' => ['exists:exam_sessions,id'],
@@ -87,6 +88,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => $request->boolean('is_free_package_active') ? ($validated['free_package_end_date'] ?? null) : null,
             'status' => $validated['status'],
             'sort_order' => $validated['sort_order'],
+            'jenjang' => $validated['jenjang'] ?? null,
             'image_path' => $imagePath,
             'published_at' => $validated['status'] === 'active' ? now() : null,
         ]);
@@ -117,6 +119,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => ['nullable', 'date', 'after_or_equal:free_package_start_date'],
             'status' => ['required', 'in:draft,active,inactive'],
             'sort_order' => ['required', 'integer', 'min:0'],
+            'jenjang' => ['nullable', 'string', 'in:SD,SMP,SMA,TKA,OSN,Umum'],
             'image' => ['nullable', 'image', 'max:4096'],
             'session_ids' => ['nullable', 'array'],
             'session_ids.*' => ['exists:exam_sessions,id'],
@@ -144,6 +147,7 @@ class AdminExamBundleController extends Controller
             'free_package_end_date' => $request->boolean('is_free_package_active') ? ($validated['free_package_end_date'] ?? null) : null,
             'status' => $validated['status'],
             'sort_order' => $validated['sort_order'],
+            'jenjang' => $validated['jenjang'] ?? null,
             'image_path' => $imagePath,
             'published_at' => $validated['status'] === 'active' ? now() : null,
         ]);

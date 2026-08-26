@@ -40,6 +40,17 @@
                     </div>
 
                     <div class="md:col-span-2">
+                        <label class="mb-1 block text-sm font-medium text-gray-700">Jenjang Pendidikan</label>
+                        <select name="jenjang" class="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500">
+                            <option value="">-- Pilih Jenjang --</option>
+                            @foreach (['SD', 'SMP', 'SMA', 'TKA', 'OSN', 'Umum'] as $j)
+                                <option value="{{ $j }}" {{ old('jenjang', $examBundle->jenjang) === $j ? 'selected' : '' }}>{{ $j }}</option>
+                            @endforeach
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">Pilih jenjang pendidikan untuk memudahkan filter.</p>
+                    </div>
+
+                    <div class="md:col-span-2">
                         <label class="mb-1 block text-sm font-medium text-gray-700">Nama Tampil (Landing Page)</label>
                         <input type="text" name="title" value="{{ old('title', $examBundle->title) }}" class="w-full rounded-lg border border-gray-300 p-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500" required>
                     </div>

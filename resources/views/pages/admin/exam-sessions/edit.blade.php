@@ -39,6 +39,16 @@
                     </label>
 
                     <label class="md:col-span-2">
+                        <span class="mb-2 block text-sm font-bold text-[#141b2c]">Jenjang Pendidikan</span>
+                        <select name="jenjang" class="w-full rounded-2xl border-[#d9def1] px-4 py-3 text-sm">
+                            <option value="">-- Pilih Jenjang --</option>
+                            @foreach (['SD', 'SMP', 'SMA', 'TKA', 'OSN', 'Umum'] as $j)
+                                <option value="{{ $j }}" {{ old('jenjang', $examSession->jenjang) === $j ? 'selected' : '' }}>{{ $j }}</option>
+                            @endforeach
+                        </select>
+                    </label>
+
+                    <label class="md:col-span-2">
                         <span class="mb-2 block text-sm font-bold text-[#141b2c]">Slug Detail</span>
                         <input name="slug" value="{{ old('slug', $examSession->slug) }}" class="w-full rounded-2xl border-[#d9def1] px-4 py-3 text-sm" placeholder="try-out-tka-sd-paket-1">
                     </label>

@@ -115,6 +115,7 @@ class AdminExamSessionController extends Controller
             'is_free_package_active' => ['nullable', 'boolean'],
             'status' => ['required', 'in:draft,active,inactive'],
             'sort_order' => ['required', 'integer', 'min:0'],
+            'jenjang' => ['nullable', 'string', 'in:SD,SMP,SMA,TKA,OSN,Umum'],
             'image' => ['nullable', 'image', 'max:4096'],
         ]);
 
@@ -137,6 +138,7 @@ class AdminExamSessionController extends Controller
             'is_free_package_active' => $request->boolean('is_free_package_active'),
             'status' => $validated['status'],
             'sort_order' => $validated['sort_order'],
+            'jenjang' => $validated['jenjang'] ?? null,
             'image_path' => $imagePath,
             'published_at' => $validated['status'] === 'active' ? now() : null,
         ]);

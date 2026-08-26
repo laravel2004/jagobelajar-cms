@@ -6,6 +6,24 @@
                 <p class="mt-3 text-sm leading-7 text-[#5f667d] sm:text-base">Pilih simulasi ujian sesuai jenjang, lengkap dengan jadwal pelaksanaan dan detail paket. Lebih hemat dengan membeli paket bundle!</p>
             </div>
 
+            <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="relative w-full sm:max-w-xs">
+                    <input type="text" id="tryoutSearch" placeholder="Cari tryout atau bundle..."
+                           class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-[#141b2c] shadow-sm outline-none transition focus:border-[#0043c6] focus:ring-1 focus:ring-[#0043c6]">
+                    <svg class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                @if(isset($jenjangList) && $jenjangList->isNotEmpty())
+                <div class="flex flex-nowrap gap-2 overflow-x-auto pb-1 sm:pb-0 hide-scrollbar" id="jenjangFilters">
+                    <button type="button" class="jenjang-btn active shrink-0 rounded-full bg-[#0043c6] px-4 py-2 text-sm font-semibold text-white transition" data-jenjang="all">Semua</button>
+                    @foreach ($jenjangList as $jenjang)
+                        <button type="button" class="jenjang-btn shrink-0 rounded-full bg-[#f1f3ff] px-4 py-2 text-sm font-semibold text-[#0043c6] transition hover:bg-[#dce1ff]" data-jenjang="{{ $jenjang }}">{{ $jenjang }}</button>
+                    @endforeach
+                </div>
+                @endif
+            </div>
+
             @if(isset($examBundles) && $examBundles->isNotEmpty())
             <div class="mt-12">
                 <h2 class="text-2xl font-extrabold text-[#141b2c] mb-6 flex items-center gap-2">
@@ -16,7 +34,9 @@
                     @foreach ($examBundles as $bundle)
                         @php($hasPromo = $bundle->is_promo_active && $bundle->sale_price !== null && $bundle->sale_price < $bundle->price)
                         @php($displayPrice = $hasPromo ? $bundle->sale_price : $bundle->price)
-                        <article class="overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff] border-2 border-[#feb700]/50 relative">
+                        <article class="tryout-item overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff] border-2 border-[#feb700]/50 relative"
+                                 data-title="{{ strtolower($bundle->title ?? $bundle->name) }}"
+                                 data-jenjang="{{ $bundle->jenjang }}">
                             <div class="absolute top-0 right-0 bg-[#feb700] text-[#271900] text-xs font-bold px-4 py-1.5 rounded-bl-xl z-10 uppercase tracking-widest">HEMAT</div>
                             <div class="relative grid aspect-[16/9] place-items-center overflow-hidden bg-gradient-to-br from-[#0043c6] to-[#4a36c4] text-white">
                                 @if ($bundle->image_path)
@@ -63,7 +83,9 @@
                     @forelse ($examSessions as $examSession)
                         @php($hasPromo = $examSession->is_promo_active && $examSession->sale_price !== null && $examSession->sale_price < $examSession->price)
                         @php($displayPrice = $hasPromo ? $examSession->sale_price : $examSession->price)
-                        <article class="overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff]">
+                        <article class="tryout-item overflow-hidden rounded-3xl bg-white shadow-[0_14px_34px_rgba(20,27,44,0.10)] ring-1 ring-[#e9edff]"
+                                 data-title="{{ strtolower($examSession->title ?? $examSession->name) }}"
+                                 data-jenjang="{{ $examSession->jenjang }}">
                             <div class="relative grid aspect-[16/9] place-items-center overflow-hidden bg-[radial-gradient(circle_at_75%_25%,rgba(254,183,0,0.55),transparent_30%),linear-gradient(135deg,#0043c6,#1e5af0)] text-white">
                                 @if ($examSession->image_path)
                                     <img src="{{ asset('storage/'.$examSession->image_path) }}" alt="{{ $examSession->title ?? $examSession->name }}" class="h-full w-full object-cover">
@@ -111,4 +133,48 @@
             </div>
         </div>
     </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('tryoutSearch');
+            const filterBtns  = document.querySelectorAll('.jenjang-btn');
+            const tryoutItems = document.querySelectorAll('.tryout-item');
+
+            let currentJenjang = 'all';
+            let currentSearch  = '';
+
+            function filterTryouts() {
+                tryoutItems.forEach(item => {
+                    const title   = item.dataset.title   || '';
+                    const jenjang = item.dataset.jenjang || '';
+
+                    const matchesSearch  = title.includes(currentSearch);
+                    const matchesJenjang = currentJenjang === 'all' || jenjang === currentJenjang;
+
+                    item.style.display = (matchesSearch && matchesJenjang) ? '' : 'none';
+                });
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', e => {
+                    currentSearch = e.target.value.toLowerCase();
+                    filterTryouts();
+                });
+            }
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', e => {
+                    filterBtns.forEach(b => {
+                        b.classList.remove('bg-[#0043c6]', 'text-white', 'active');
+                        b.classList.add('bg-[#f1f3ff]', 'text-[#0043c6]');
+                    });
+                    e.currentTarget.classList.remove('bg-[#f1f3ff]', 'text-[#0043c6]');
+                    e.currentTarget.classList.add('bg-[#0043c6]', 'text-white', 'active');
+
+                    currentJenjang = e.currentTarget.dataset.jenjang;
+                    filterTryouts();
+                });
+            });
+        });
+    </script>
 </x-layouts.public>
