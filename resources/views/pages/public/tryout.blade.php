@@ -6,8 +6,8 @@
                 <p class="mt-3 text-sm leading-7 text-[#5f667d] sm:text-base">Pilih simulasi ujian sesuai jenjang, lengkap dengan jadwal pelaksanaan dan detail paket. Lebih hemat dengan membeli paket bundle!</p>
             </div>
 
-            <div class="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <div class="relative w-full sm:max-w-64">
+            <div class="mt-8 flex flex-col gap-4">
+                <div class="relative w-full">
                     <input type="text" id="tryoutSearch" placeholder="Cari tryout atau bundle..."
                            class="w-full rounded-xl border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-[#141b2c] shadow-sm outline-none transition focus:border-[#0043c6] focus:ring-1 focus:ring-[#0043c6]">
                     <svg class="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
