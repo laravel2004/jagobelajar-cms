@@ -84,7 +84,7 @@
                                         <span class="rounded-full px-2.5 py-1 text-[11px] font-bold ring-1 {{ $statusClass }}">{{ ucfirst($examSession->status) }}</span>
                                     </div>
                                     <p class="mt-1 truncate text-sm text-[#8a93a8]">Source: {{ $examSession->name }}</p>
-                                    <p class="mt-2 line-clamp-1 text-sm text-[#5f667d]">{{ $examSession->description ?: 'Belum ada deskripsi. Lengkapi sebelum publish.' }}</p>
+                                    <p class="mt-2 line-clamp-1 text-sm text-[#5f667d]">{!! $examSession->description ? nl2br(e($examSession->description)) : 'Belum ada deskripsi. Lengkapi sebelum publish.' !!}</p>
                                 </div>
                             </div>
 

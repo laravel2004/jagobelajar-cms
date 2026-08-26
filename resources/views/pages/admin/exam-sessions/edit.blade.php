@@ -1,4 +1,4 @@
-﻿<x-layouts.admin :title="'Edit Sesi Ujian - '.config('app.name')">
+<x-layouts.admin :title="'Edit Sesi Ujian - '.config('app.name')">
     <form method="POST" action="{{ route('admin.exam-sessions.update', $examSession) }}" enctype="multipart/form-data" class="space-y-6">
         @csrf
         @method('PUT')
@@ -107,7 +107,7 @@
                     <div class="p-5">
                         <p class="text-xs font-bold uppercase tracking-[0.18em] text-[#0043c6]">Preview Card</p>
                         <h3 class="mt-2 text-xl font-extrabold text-[#141b2c]">{{ old('title', $examSession->title) }}</h3>
-                        <p class="mt-2 line-clamp-2 text-sm leading-6 text-[#5f667d]">{{ old('description', $examSession->description) ?: 'Belum ada deskripsi.' }}</p>
+                        <p class="mt-2 line-clamp-2 text-sm leading-6 text-[#5f667d]">{!! old('description', $examSession->description) ? nl2br(e(old('description', $examSession->description))) : 'Belum ada deskripsi.' !!}</p>
                     </div>
                 </section>
 

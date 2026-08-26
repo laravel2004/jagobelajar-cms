@@ -28,7 +28,13 @@
                     <div class="p-4 sm:p-6 lg:p-8">
                         <p class="text-xs font-bold uppercase tracking-[0.18em] text-[#0043c6]">{{ optional($examSession->starts_at)->translatedFormat('l, d F Y') ?? '-' }}</p>
                         <h1 class="mt-3 text-3xl font-extrabold tracking-tight text-[#141b2c] sm:text-4xl">{{ $examSession->title ?? $examSession->name }}</h1>
-                        <p class="mt-4 text-sm leading-7 text-[#5f667d] sm:text-base">{{ $examSession->description ?: 'Try out ini dirancang sebagai simulasi yang mendekati ujian sesungguhnya, sehingga siswa dapat mengukur kesiapan belajar dengan lebih jujur dan terstruktur.' }}</p>
+                        @if($examSession->description)
+                            <div class="mt-4 prose prose-blue max-w-none text-sm leading-7 text-[#5f667d] sm:text-base">
+                                {!! nl2br(e($examSession->description)) !!}
+                            </div>
+                        @else
+                            <p class="mt-4 text-sm leading-7 text-[#5f667d] sm:text-base">Try out ini dirancang sebagai simulasi yang mendekati ujian sesungguhnya, sehingga siswa dapat mengukur kesiapan belajar dengan lebih jujur dan terstruktur.</p>
+                        @endif
 
                         <div class="mt-6 grid gap-3 text-sm text-[#434655] grid-cols-1 sm:grid-cols-2">
                             <div class="flex items-center justify-between rounded-2xl bg-[#f1f3ff] px-4 py-3"><span>Mapel</span><strong>{{ $examSession->subject ?? '-' }}</strong></div>
