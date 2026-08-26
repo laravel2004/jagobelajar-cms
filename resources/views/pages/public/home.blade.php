@@ -7,7 +7,7 @@
     <section class="relative overflow-hidden bg-[#f9f9ff]">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(182,196,255,0.45),transparent_34%),linear-gradient(135deg,rgba(241,243,255,0.92),rgba(255,255,255,0.82)_48%,rgba(249,249,255,1))]"></div>
         <div class="jb-container relative grid items-center gap-8 py-10 sm:py-14 lg:min-h-[690px] lg:grid-cols-[0.88fr_1.12fr] lg:gap-10 lg:py-24">
-            <div class="max-w-2xl text-center lg:text-left">
+            <div class="mx-auto max-w-2xl text-center lg:mx-0 lg:text-left">
                 <span class="inline-flex max-w-full items-center gap-2 rounded-full bg-[#dce1ff] px-4 py-2 text-left text-[11px] font-semibold text-[#003ab1] shadow-sm sm:text-xs">
                     <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5-9 4.5z" /><path d="M7 10v4.8c0 1.2 2.2 2.7 5 2.7s5-1.5 5-2.7V10" /><path d="M21 8v6" /><path d="M21 14.5v.5" /></svg>
                     {{ $homeContent->hero_badge ?? 'Bimbel & Try Out Online #BelajarJadiJago' }}
