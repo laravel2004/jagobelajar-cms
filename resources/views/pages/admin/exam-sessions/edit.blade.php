@@ -10,7 +10,7 @@
                     <div>
                         <span class="rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] ring-1 ring-white/20">Edit Tryout Detail</span>
                         <h2 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">{{ $examSession->title ?? $examSession->name }}</h2>
-                        <p class="mt-3 text-sm leading-7 text-white/80">Field di bawah mengikuti card dan detail yang tampil di halaman publik `/tryout`.</p>
+
                     </div>
                     <div class="rounded-3xl bg-white/12 p-4 ring-1 ring-white/20 backdrop-blur">
                         <p class="text-xs font-bold uppercase tracking-[0.18em] text-white/70">Source irt-quiz</p>
