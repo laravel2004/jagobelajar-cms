@@ -1,4 +1,4 @@
-﻿<x-layouts.admin :title="'Bimbel - '.config('app.name')">
+<x-layouts.admin :title="'Bimbel - '.config('app.name')">
     <div class="space-y-6">
         @if (session('status'))
             <div class="rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 ring-1 ring-emerald-100">{{ session('status') }}</div>
@@ -28,7 +28,7 @@
                             <div class="min-w-0">
                                 <p class="text-xs font-bold uppercase tracking-[0.16em] text-[#8a93a8]">{{ $bimbel->status }}</p>
                                 <h2 class="mt-1 text-xl font-extrabold text-[#141b2c]">{{ $bimbel->name }}</h2>
-                                <p class="mt-2 max-w-3xl text-sm leading-6 text-[#5f667d]">{{ $bimbel->description }}</p>
+                                <p class="mt-2 max-w-3xl text-sm leading-6 text-[#5f667d]">{!! nl2br(e($bimbel->description)) !!}</p>
                                 <p class="mt-2 text-sm text-[#434655]">Harga: <strong>{{ $bimbel->has_promo ? 'Rp'.number_format($bimbel->display_price, 0, ',', '.') : 'Rp'.number_format($bimbel->price, 0, ',', '.') }}</strong></p>
                             </div>
                         </div>

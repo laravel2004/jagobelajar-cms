@@ -1,4 +1,4 @@
-﻿<x-layouts.public :title="$bimbel->name.' - '.config('app.name')">
+<x-layouts.public :title="$bimbel->name.' - '.config('app.name')">
     @php($hasPromo = $bimbel->has_promo)
     @php($displayPrice = $bimbel->display_price)
     <section class="relative overflow-hidden bg-[#f9f9ff] py-12 sm:py-16">
@@ -43,7 +43,7 @@
 
                         <div class="mt-8 border-t border-[#e9edff] pt-8">
                             <h2 class="text-2xl font-extrabold text-[#141b2c]">Deskripsi Bimbel</h2>
-                            <p class="mt-4 text-sm leading-7 text-[#5f667d] sm:text-base">{{ $bimbel->description }}</p>
+                            <p class="mt-4 text-sm leading-7 text-[#5f667d] sm:text-base">{!! nl2br(e($bimbel->description)) !!}</p>
                         </div>
                     </div>
                 </article>

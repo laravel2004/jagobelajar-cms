@@ -58,7 +58,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p class="mt-5 border-t border-[#e9edff] pt-5 text-sm leading-6 text-[#5f667d]">{{ \Illuminate\Support\Str::limit($bimbel->description, 95) }}</p>
+                            <p class="mt-5 border-t border-[#e9edff] pt-5 text-sm leading-6 text-[#5f667d]">{!! nl2br(e(\Illuminate\Support\Str::limit($bimbel->description, 95))) !!}</p>
                             <a href="{{ route('bimbel.detail', $bimbel->slug) }}" class="mt-6 inline-flex w-full justify-center rounded-2xl bg-[#feb700] px-5 py-3 text-sm font-extrabold text-[#271900] transition hover:bg-[#ffca35]">Lihat Detail Bimbel</a>
                         </div>
                     </article>
