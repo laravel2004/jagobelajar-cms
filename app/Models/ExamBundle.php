@@ -35,4 +35,9 @@ class ExamBundle extends Model
     {
         return $this->belongsToMany(ExamSession::class, 'exam_bundle_session');
     }
+
+    public function jenjang(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Jenjang::class);
+    }
 }
