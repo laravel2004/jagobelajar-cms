@@ -75,6 +75,12 @@ Route::post('/admin/paket-bundle', [AdminExamBundleController::class, 'store'])-
 Route::get('/admin/paket-bundle/{examBundle}/edit', [AdminExamBundleController::class, 'edit'])->name('admin.exam-bundles.edit');
 Route::put('/admin/paket-bundle/{examBundle}', [AdminExamBundleController::class, 'update'])->name('admin.exam-bundles.update');
 
+use App\Http\Controllers\AdminJenjangController;
+Route::get('/admin/jenjang', [AdminJenjangController::class, 'index'])->name('admin.jenjangs.index');
+Route::post('/admin/jenjang', [AdminJenjangController::class, 'store'])->name('admin.jenjangs.store');
+Route::put('/admin/jenjang/{jenjang}', [AdminJenjangController::class, 'update'])->name('admin.jenjangs.update');
+Route::delete('/admin/jenjang/{jenjang}', [AdminJenjangController::class, 'destroy'])->name('admin.jenjangs.destroy');
+
 use App\Http\Controllers\AdminSettingController;
 Route::get('/admin/settings/payment', [AdminSettingController::class, 'editPayment'])->name('admin.settings.payment');
 Route::post('/admin/settings/payment', [AdminSettingController::class, 'updatePayment'])->name('admin.settings.payment.update');

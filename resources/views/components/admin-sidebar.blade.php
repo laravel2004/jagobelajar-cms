@@ -28,6 +28,7 @@
             <a class="{{ request()->routeIs('admin.blogs.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.blogs.index') }}">CMS Blog</a>
             <a class="{{ request()->routeIs('admin.users.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.users.index') }}">User</a>
             <a class="{{ request()->routeIs('admin.bimbel.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.bimbel.index') }}">Bimbel</a>
+            <a class="{{ request()->routeIs('admin.jenjangs.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.jenjangs.index') }}">Master Jenjang</a>
             <a class="{{ request()->routeIs('admin.exam-sessions.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.exam-sessions.index') }}">Sesi Ujian</a>
             <a class="{{ request()->routeIs('admin.exam-bundles.*') ? $activeLink : $inactiveLink }}" href="{{ route('admin.exam-bundles.index') }}">Paket Bundle</a>
             <a class="{{ request()->routeIs('admin.settings.payment') ? $activeLink : $inactiveLink }}" href="{{ route('admin.settings.payment') }}">Payment Gateway</a>
